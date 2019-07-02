@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <FileRef
+      location = "group:../Helpers.swift">
+   </FileRef>
+   <FileRef
+      location = "group:/Users/tad/Desktop/tnovak/ObjectLocator/AutomaticObjectDetection/CoreML-in-ARKit-master/CoreML in ARKit/CVPixelBuffer+Helpers.swift">
+   </FileRef>
+   <FileRef
+      location = "self:">
+   </FileRef>
+</Workspace>

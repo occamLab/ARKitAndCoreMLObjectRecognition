@@ -339,20 +339,65 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         }
     }
     
+    //attempts to find an sub image in the greater image
+    func predict(image: UIImage) {
+        if let pixelBuffer = image.pixelBuffer(width: YOLO.inputWidth, height: YOLO.inputHeight) {
+            //fills a pixel buffer with a sub image
+            predict(pixelBuffer: pixelBuffer, inflightIndex: 0)
+        }
+    }
+    
+    
+    func predict(pixelBuffer: CVPixelBuffer, inflightIndex: Int) {
+        // Measure how long it takes to predict a single video frame.
+        let startTime = CACurrentMediaTime()
+        
+        // This is an alternative way to resize the image (using vImage):
+        //if let resizedPixelBuffer = resizePixelBuffer(pixelBuffer,
+        //                                              width: YOLO.inputWidth,
+        //                                              height: YOLO.inputHeight) {
+        
+        // Resize the input with Core Image to 416x416.
+        if let resizedPixelBuffer = resizedPixelBuffers[inflightIndex] {
+            let ciImage = CIImage(cvPixelBuffer: pixelBuffer)
+            let sx = CGFloat(YOLO.inputWidth) / CGFloat(CVPixelBufferGetWidth(pixelBuffer))
+            let sy = CGFloat(YOLO.inputHeight) / CGFloat(CVPixelBufferGetHeight(pixelBuffer))
+            let scaleTransform = CGAffineTransform(scaleX: sx, y: sy)
+            let scaledImage = ciImage.transformed(by: scaleTransform)
+            ciContext.render(scaledImage, to: resizedPixelBuffer)
+            
+            
+            // Give the resized input to our model.
+            if let result = try? yolo.predict(image: resizedPixelBuffer){
+                let elapsed = CACurrentMediaTime() - startTime
+                showOnMainThread(result, elapsed)
+            } else {
+                //if the model could not find anything
+                print("BOGUS")
+            }
+        }
+    }
+    
+    func predictUsingVision(pixelBuffer: CVPixelBuffer, inflightIndex: Int) {
+        // Measure how long it takes to predict a single video frame. Note that
+        // predict() can be called on the next frame while the previous one is
+        // still being processed. Hence the need to queue up the start times.
+        startTimes.append(CACurrentMediaTime())
+        
+        // Vision will automatically resize the input image.
+        let handler = VNImageRequestHandler(cvPixelBuffer: pixelBuffer)
+        let request = requests[inflightIndex]
+        
+        // Because perform() will block until after the request completes, we
+        // run it on a concurrent background queue, so that the next frame can
+        // be scheduled in parallel with this one.
+        DispatchQueue.global().async {
+            try? handler.perform([request])
+        }
+    }
+    
     func visionRequestDidComplete(request: VNRequest, error: Error?) {
         
-        /*//make an observation and find fproper features
-        if let observations = request.results as? [VNCoreMLFeatureValueObservation],
-            let features = observations.first?.featureValue.multiArrayValue {
-            
-            //set the bounding boxes of the features found
-            let boundingBoxes = yolo.computeBoundingBoxes(features: features)
-            //stop the timer
-            let elapsed = CACurrentMediaTime() - startTimes.remove(at: 0)
-            showOnMainThread(boundingBoxes, elapsed)
-        } else {
-            print("BOGUS!")
-        }*/
     }
     
     func showOnMainThread(_ boundingBoxes: [YOLO.Prediction], _ elapsed: CFTimeInterval) {
@@ -414,7 +459,33 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         // Get Camera Image as RGB
         let pixbuff : CVPixelBuffer? = (sceneView.session.currentFrame?.capturedImage)
         if pixbuff == nil { return }
+        
+        
+        // For better throughput, we want to schedule multiple prediction requests
+        // in parallel. These need to be separate instances, and inflightBuffer is
+        // the index of the current request.
+        let inflightIndex = inflightBuffer
+        inflightBuffer += 1
+        if inflightBuffer >= ViewController.maxInflightBuffers {
+            inflightBuffer = 0
+        }
+        
+        if useVision {
+            // This method should always be called from the same thread!
+            // Ain't nobody likes race conditions and crashes.
+            self.predictUsingVision(pixelBuffer: pixbuff!, inflightIndex: inflightIndex)
+        } else {
+            // For better throughput, perform the prediction on a concurrent
+            // background queue instead of on the serial VideoCapture queue.
+            DispatchQueue.global().async {
+                self.predict(pixelBuffer: pixbuff!, inflightIndex: inflightIndex)
+            }
+        }
+        
         let ciImage = CIImage(cvPixelBuffer: pixbuff!)
+        
+        
+        
         // Note: Not entirely sure if the ciImage is being interpreted as RGB, but for now it works with the Inception model.
         // Note2: Also uncertain if the pixelBuffer should be rotated before handing off to Vision (VNImageRequestHandler) - regardless, for now, it still works well with the Inception model.
         

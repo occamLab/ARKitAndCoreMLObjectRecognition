@@ -35,8 +35,6 @@ class YOLO {
         
         var predictions = [Prediction]()
         
-        print(features.confidence[[0, 0]])
-        
         let dim0size = Int(features.confidence.shape[0])
         let dim1size = Int(features.confidence.shape[1])
 
@@ -48,6 +46,7 @@ class YOLO {
             for j in 0..<dim1size {
                 
                 if Int(features.confidence[[NSNumber(value: i), NSNumber(value: j)]]) > maximumConfidence{
+                    // check this out
                     maximumConfidence = Int(features.confidence[[NSNumber(value: i), NSNumber(value: j)]])
                     maximumIndex = j
                 }

@@ -8,11 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		1FB6CE3F22CBABDD00DCD728 /* BoundingBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FB6CE3E22CBABDD00DCD728 /* BoundingBox.swift */; };
-		1FB6CE4522CBAC2600DCD728 /* CVPixelBuffer+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FB6CE4422CBAC2500DCD728 /* CVPixelBuffer+Helpers.swift */; };
 		1FB6CE4722CBAC4B00DCD728 /* UIImage+CVPixelBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FB6CE4622CBAC4B00DCD728 /* UIImage+CVPixelBuffer.swift */; };
 		1FB6CE4922CBAC5700DCD728 /* YOLO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FB6CE4822CBAC5700DCD728 /* YOLO.swift */; };
 		1FB6CE4F22CBC75B00DCD728 /* YOLOv3.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 1FB6CE4E22CBC75B00DCD728 /* YOLOv3.mlmodel */; };
 		1FB6CE5122CBDDFE00DCD728 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FB6CE5022CBDDFD00DCD728 /* Helpers.swift */; };
+		1FB6CE5322CBF97500DCD728 /* CVPixelBuffer+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FB6CE5222CBF97500DCD728 /* CVPixelBuffer+Helpers.swift */; };
 		AEEC85651F18B8C600D43B9B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEEC85641F18B8C600D43B9B /* AppDelegate.swift */; };
 		AEEC85671F18B8C600D43B9B /* art.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = AEEC85661F18B8C600D43B9B /* art.scnassets */; };
 		AEEC85691F18B8C600D43B9B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEEC85681F18B8C600D43B9B /* ViewController.swift */; };
@@ -23,11 +23,11 @@
 
 /* Begin PBXFileReference section */
 		1FB6CE3E22CBABDD00DCD728 /* BoundingBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoundingBox.swift; sourceTree = "<group>"; };
-		1FB6CE4422CBAC2500DCD728 /* CVPixelBuffer+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "CVPixelBuffer+Helpers.swift"; path = "/Users/tad/Desktop/tnovak/ObjectLocator/AutomaticObjectDetection/CoreML-in-ARKit-master/CoreML in ARKit/CVPixelBuffer+Helpers.swift"; sourceTree = "<absolute>"; };
 		1FB6CE4622CBAC4B00DCD728 /* UIImage+CVPixelBuffer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+CVPixelBuffer.swift"; sourceTree = "<group>"; };
 		1FB6CE4822CBAC5700DCD728 /* YOLO.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YOLO.swift; sourceTree = "<group>"; };
 		1FB6CE4E22CBC75B00DCD728 /* YOLOv3.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = YOLOv3.mlmodel; sourceTree = "<group>"; };
 		1FB6CE5022CBDDFD00DCD728 /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Helpers.swift; path = "CoreML in ARKit.xcodeproj/../Helpers.swift"; sourceTree = SOURCE_ROOT; };
+		1FB6CE5222CBF97500DCD728 /* CVPixelBuffer+Helpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CVPixelBuffer+Helpers.swift"; sourceTree = "<group>"; };
 		AEEC85611F18B8C600D43B9B /* CoreML in ARKit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "CoreML in ARKit.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		AEEC85641F18B8C600D43B9B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		AEEC85661F18B8C600D43B9B /* art.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = art.scnassets; sourceTree = "<group>"; };
@@ -70,7 +70,7 @@
 			children = (
 				AEEC85641F18B8C600D43B9B /* AppDelegate.swift */,
 				1FB6CE5022CBDDFD00DCD728 /* Helpers.swift */,
-				1FB6CE4422CBAC2500DCD728 /* CVPixelBuffer+Helpers.swift */,
+				1FB6CE5222CBF97500DCD728 /* CVPixelBuffer+Helpers.swift */,
 				AEEC85661F18B8C600D43B9B /* art.scnassets */,
 				AEEC85681F18B8C600D43B9B /* ViewController.swift */,
 				AEEC856A1F18B8C600D43B9B /* Main.storyboard */,
@@ -161,8 +161,8 @@
 				AEEC85691F18B8C600D43B9B /* ViewController.swift in Sources */,
 				1FB6CE4F22CBC75B00DCD728 /* YOLOv3.mlmodel in Sources */,
 				1FB6CE5122CBDDFE00DCD728 /* Helpers.swift in Sources */,
-				1FB6CE4522CBAC2600DCD728 /* CVPixelBuffer+Helpers.swift in Sources */,
 				AEEC85651F18B8C600D43B9B /* AppDelegate.swift in Sources */,
+				1FB6CE5322CBF97500DCD728 /* CVPixelBuffer+Helpers.swift in Sources */,
 				1FB6CE4722CBAC4B00DCD728 /* UIImage+CVPixelBuffer.swift in Sources */,
 				1FB6CE3F22CBABDD00DCD728 /* BoundingBox.swift in Sources */,
 			);

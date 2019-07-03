@@ -14,10 +14,36 @@ import AVFoundation
 import CoreMedia
 import Vision
 
+class SCNIdentifiedObject: SCNNode {
+    var objectName: NSString?
+
+    init(objectName: NSString) {
+        super.init()
+        self.objectName = objectName
+    }
+    
+    /// Encode the identified object node.
+    ///
+    /// - Parameter aCoder: the encoder
+    override func encode(with aCoder: NSCoder) {
+        super.encode(with: aCoder)
+        aCoder.encode(objectName, forKey: "objectName")
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        objectName = aDecoder.decodeObject(of: NSString.self, forKey: "objectName")
+    }
+}
+
+
 class ViewController: UIViewController, ARSCNViewDelegate {
     
     // true: use Vision to drive Core ML, false: use plain Core ML
     let useVision = false
+    
+    //Dictates the radius in which nodes will be combined distance in in meteres
+    let recombiningThreshold: Double = 0.3
     
     // How many predictions we can do concurrently.
     static let maxInflightBuffers = 3
@@ -86,7 +112,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         // Create a session configuration
         let configuration = ARWorldTrackingConfiguration()
         // Enable plane detection
-        configuration.planeDetection = .horizontal
+        configuration.planeDetection = [.horizontal,.vertical]
         
         // Run the view's session
         sceneView.session.run(configuration)
@@ -139,7 +165,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             // NOTE: If you choose another crop/scale option, then you must also
             // change how the BoundingBox objects get scaled when they are drawn.
             // Currently they assume the full input image is used.
-            request.imageCropAndScaleOption = .scaleFill
+            request.imageCropAndScaleOption = .centerCrop
             requests.append(request)
         }
     }
@@ -180,7 +206,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         return true
     }
     
-    // MARK: - Interaction
+    // MARK: - Utility Functions
     func createNewBubbleParentNode(_ text : String) -> SCNNode {
         // Warning: Creating 3D Text is susceptible to crashing. To reduce chances of crashing; reduce number of polygons, letters, smoothness, etc.
         
@@ -213,7 +239,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         let sphereNode = SCNNode(geometry: sphere)
         
         // BUBBLE PARENT NODE
-        let bubbleNodeParent = SCNNode()
+        let bubbleNodeParent = SCNIdentifiedObject(objectName: NSString(string: text))
         bubbleNodeParent.addChildNode(bubbleNode)
         bubbleNodeParent.addChildNode(sphereNode)
         bubbleNodeParent.constraints = [billboardConstraint]
@@ -222,19 +248,46 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
     
     //Add a 3d marker at the given location with the given label
-    func add3dLabel(text : String, point : CGPoint){
+    func add3dLabel(label: String, certanty : String, point : CGPoint){
+        print(point)
+        //let arRaycast = sceneView.session.raycastQuery(from: point, allowing: .estimatedPlane, alignment: .any)
         let arHitTestResults : [ARHitTestResult] = sceneView.hitTest(point, types: [.featurePoint]) // Alternatively, we could use '.existingPlaneUsingExtent' for more grounded hit-test-points.
-        
         if let closestResult = arHitTestResults.first {
-            // Get Coordinates of HitTest
+            
+            // Get Coordinates of the neares hit point in world space
             let transform : matrix_float4x4 = closestResult.worldTransform
             let worldCoord : SCNVector3 = SCNVector3Make(transform.columns.3.x, transform.columns.3.y, transform.columns.3.z)
             
+            //variables holding the sum of the positions of the nearby nodes and the number of nodes referencing the same object. these are used for calculating averages
+            var nodePositionSum: SCNVector3 = worldCoord
+            var nodeNumber: Int = 1
+            
             // Create 3D Text
-            let node : SCNNode = createNewBubbleParentNode(text)
+            
+            for child:SCNNode in sceneView.scene.rootNode.childNodes{
+                if let child = child as? SCNIdentifiedObject, let objectName = child.objectName, d3Distance(child.position,worldCoord) <= recombiningThreshold && String(objectName).contains(label) {
+                    
+                    //increments the sum and total number of nodes used (useful for computing averages)
+                    nodePositionSum = SCNVector3(nodePositionSum.x+child.position.x,nodePositionSum.y+child.position.y,nodePositionSum.z+child.position.z)
+                    nodeNumber += 1
+                    
+                    //removes the node so it does not display extra labels
+                    child.removeFromParentNode()
+                }
+            }
+            
+            //creates the new node to have tha average position of all of the found nodes
+            let node : SCNNode = createNewBubbleParentNode("\(label): \(certanty)%")
             sceneView.scene.rootNode.addChildNode(node)
-            node.position = worldCoord
+            //seet the position to be equal to the average node position
+            node.position = SCNVector3(nodePositionSum.x/Float(nodeNumber),nodePositionSum.y/Float(nodeNumber),nodePositionSum.z/Float(nodeNumber))
+            print("world \(worldCoord) actual \(node.position)")
         }
+    }
+    
+    //find the 3dDistance between two world points
+    func d3Distance(_ point1 : SCNVector3, _ point2: SCNVector3) -> Double{
+        return Double(sqrt(Double(pow((point1.x-point2.x),2))+Double(pow((point1.y-point2.y),2))+Double(pow((point1.z-point2.z),2))))
     }
     
     // MARK: - CoreML Vision Handling
@@ -368,13 +421,18 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 // on the video preview, which is as wide as the screen and has a 16:9
                 // aspect ratio. The video preview also may be letterboxed at the top
                 // and bottom.
-                let width = view.bounds.width
-                let height = width * 16 / 9
-                let scaleX = width / CGFloat(YOLO.inputWidth)
-                let scaleY = height / CGFloat(YOLO.inputHeight)
-                let top = (view.bounds.height - height) / 2
+                let viewWidth = view.bounds.width
+                let viewHeight = view.bounds.height
+            
+                // note: image is rotated 90 degrees (or maybe 270 degrees?) with respect to the view
+                let imageWidth = CVPixelBufferGetWidth((sceneView.session.currentFrame?.capturedImage)!)
+                let imageHeight = CVPixelBufferGetHeight((sceneView.session.currentFrame?.capturedImage)!)
+            
+                let scaleX = viewWidth / CGFloat(YOLO.inputWidth)
+                let scaleY = viewHeight / CGFloat(YOLO.inputHeight)
+                let top = (view.bounds.height - viewHeight) / 2
                 
-                // Translate and scale the rectangle to our own coordinate system.
+                // Translate and scale the rectangle to our own coordinate system based around the screen size
                 var rect = prediction.rect
                 rect.origin.x *= scaleX
                 rect.origin.y *= scaleY
@@ -382,11 +440,12 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 rect.size.width *= scaleX
                 rect.size.height *= scaleY
                 
-                // Show the bounding box.
-                print("\(prediction) \(labels[prediction.classIndex])")
+                // print the prediction to the console
+                print("prediction \(prediction.rect) rect \(rect) \(labels[prediction.classIndex])")
             
                 //places a node at the center of the bounding box given
-                add3dLabel(text: "\(labels[prediction.classIndex]): \(prediction.score * 100)%", point: CGPoint(x: CGFloat(rect.origin.x+(rect.size.width/2)), y: CGFloat(rect.origin.y+(rect.size.height/2))))
+            add3dLabel(label: String(labels[prediction.classIndex]), certanty: String(prediction.score * 100), point: CGPoint(x: CGFloat(rect.origin.x+(rect.size.width/2)), y: CGFloat(rect.origin.y+(rect.size.height/2))))
+
         }
     }
     

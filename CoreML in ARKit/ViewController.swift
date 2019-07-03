@@ -19,10 +19,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     // true: use Vision to drive Core ML, false: use plain Core ML
     let useVision = false
     
-    // Disable this to see the energy impact of just running the neural net,
-    // otherwise it also counts the GPU activity of drawing the bounding boxes.
-    let drawBoundingBoxes = true
-    
     // How many predictions we can do concurrently.
     static let maxInflightBuffers = 3
     
@@ -32,11 +28,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     //MARK: Private variables
     var requests = [VNCoreMLRequest]()
     var startTimes: [CFTimeInterval] = []
-    
-    //creates an array of bounding boxes of differnt colors
-    var boundingBoxes = [BoundingBox]()
-    var colors: [UIColor] = []
-    
+
     //creates an instance of a structure which can store a static image for processing
     let ciContext = CIContext()
     var resizedPixelBuffers: [CVPixelBuffer?] = []
@@ -81,11 +73,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         //view.addGestureRecognizer(tapGesture)
         
         //////////////////////////////////////////////////
-        
-        setUpBoundingBoxes()
         setUpCoreImage()
         setUpVision()
-        setUpBoundingBoxLayer()
         
         // Begin Loop to Update CoreML
         loopCoreMLUpdate()
@@ -116,26 +105,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
     
     // MARK: - Initialization
-    
-    func setUpBoundingBoxes() {
-        //add bounding boxes equal to the maximum number of bounding boxes
-        for _ in 0..<YOLO.maxBoundingBoxes {
-            boundingBoxes.append(BoundingBox())
-        }
-        
-        // Make colors for the bounding boxes. There is one color for each class,
-        // 20 classes in total.
-        for r: CGFloat in [0.2, 0.4, 0.6, 0.8, 1.0] {
-            for g: CGFloat in [0.3, 0.7] {
-                for b: CGFloat in [0.4, 0.8] {
-                    let color = UIColor(red: r, green: g, blue: b, alpha: 1)
-                    //addd the colors to the array of colors created before
-                    colors.append(color)
-                }
-            }
-        }
-    }
-    
     func setUpCoreImage() {
         // Since we might be running several requests in parallel, we also need
         // to do the resizing in different pixel buffers or we might overwrite a
@@ -172,20 +141,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             // Currently they assume the full input image is used.
             request.imageCropAndScaleOption = .scaleFill
             requests.append(request)
-        }
-    }
-    
-    
-    func setUpBoundingBoxLayer() {
-        
-        let previewLayer = CALayer()
-        self.sceneView.layer.addSublayer(previewLayer)
-        //self.resizePreviewLayer()
-        
-        
-        // Add the bounding box layers to the UI, on top of the video preview.
-        for box in self.boundingBoxes {
-            box.addToLayer(self.sceneView.layer)
         }
     }
     
@@ -235,8 +190,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         // BUBBLE-TEXT
         let bubble = SCNText(string: text, extrusionDepth: CGFloat(bubbleDepth))
-        var font = UIFont(name: "Futura", size: 0.15)
-        //font = font?.withTraits(traits: .traitBold)
+        let font = UIFont(name: "Futura", size: 0.15)
         bubble.font = font
         bubble.alignmentMode = kCAAlignmentCenter
         bubble.firstMaterial?.diffuse.contents = UIColor.orange
@@ -396,29 +350,17 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
     }
     
-    func showOnMainThread(_ boundingBoxes: [YOLO.Prediction], _ elapsed: CFTimeInterval) {
+    func showOnMainThread(_ predictions: [YOLO.Prediction], _ elapsed: CFTimeInterval) {
         //redraw the bounding boxes
-        if drawBoundingBoxes {
-            DispatchQueue.main.async {
-                // For debugging, to make sure the resized CVPixelBuffer is correct.
-                //var debugImage: CGImage?
-                //VTCreateCGImageFromCVPixelBuffer(resizedPixelBuffer, nil, &debugImage)
-                //self.debugImageView.image = UIImage(cgImage: debugImage!)
-                
-                //show the predictions in the view
-                self.show(predictions: boundingBoxes)
-                //measure the fps
-                //let fps = self.measureFPS()
-                //print the elaped time
-                //self.timeLabel.text = String(format: "Elapsed %.5f seconds - %.2f FPS", elapsed, fps)
-            }
+        DispatchQueue.main.async {
+            //show the predictions in the view
+            self.show(predictions: predictions)
         }
     }
     
     func show(predictions: [YOLO.Prediction]) {
         //iterate through all of the bounding boxes
-        for i in 0..<boundingBoxes.count {
-            if i < predictions.count {
+        for i in 0..<predictions.count {
                 let prediction = predictions[i]
                 
                 // The predicted bounding box is in the coordinate space of the input
@@ -442,13 +384,9 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 
                 // Show the bounding box.
                 print("\(prediction) \(labels[prediction.classIndex])")
+            
+                //places a node at the center of the bounding box given
                 add3dLabel(text: "\(labels[prediction.classIndex]): \(prediction.score * 100)%", point: CGPoint(x: CGFloat(rect.origin.x+(rect.size.width/2)), y: CGFloat(rect.origin.y+(rect.size.height/2))))
-                //let label = String(format: "%@ %.1f", labels[prediction.classIndex], prediction.score * 100)
-                //let color = colors[prediction.classIndex]
-                //boundingBoxes[i].show(frame: rect, label: label, color: color)
-            } else {
-                //boundingBoxes[i].hide()
-            }
         }
     }
     

@@ -64,4 +64,5 @@ class YOLO {
         // use "non-maximum suppression" to prune those duplicate bounding boxes.
         return nonMaxSuppression(boxes: predictions, limit: YOLO.maxBoundingBoxes, threshold: Float(iouThreshold))
     }
+    
 }

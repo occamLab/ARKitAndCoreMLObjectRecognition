@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1FB6CE3F22CBABDD00DCD728 /* BoundingBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FB6CE3E22CBABDD00DCD728 /* BoundingBox.swift */; };
 		1FB6CE4722CBAC4B00DCD728 /* UIImage+CVPixelBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FB6CE4622CBAC4B00DCD728 /* UIImage+CVPixelBuffer.swift */; };
 		1FB6CE4922CBAC5700DCD728 /* YOLO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FB6CE4822CBAC5700DCD728 /* YOLO.swift */; };
 		1FB6CE4F22CBC75B00DCD728 /* YOLOv3.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 1FB6CE4E22CBC75B00DCD728 /* YOLOv3.mlmodel */; };
@@ -22,7 +21,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		1FB6CE3E22CBABDD00DCD728 /* BoundingBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoundingBox.swift; sourceTree = "<group>"; };
 		1FB6CE4622CBAC4B00DCD728 /* UIImage+CVPixelBuffer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+CVPixelBuffer.swift"; sourceTree = "<group>"; };
 		1FB6CE4822CBAC5700DCD728 /* YOLO.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YOLO.swift; sourceTree = "<group>"; };
 		1FB6CE4E22CBC75B00DCD728 /* YOLOv3.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = YOLOv3.mlmodel; sourceTree = "<group>"; };
@@ -80,7 +78,6 @@
 				1FB6CE4822CBAC5700DCD728 /* YOLO.swift */,
 				AEEC85721F18B8C600D43B9B /* Info.plist */,
 				1FB6CE4E22CBC75B00DCD728 /* YOLOv3.mlmodel */,
-				1FB6CE3E22CBABDD00DCD728 /* BoundingBox.swift */,
 			);
 			path = "CoreML in ARKit";
 			sourceTree = "<group>";
@@ -164,7 +161,6 @@
 				AEEC85651F18B8C600D43B9B /* AppDelegate.swift in Sources */,
 				1FB6CE5322CBF97500DCD728 /* CVPixelBuffer+Helpers.swift in Sources */,
 				1FB6CE4722CBAC4B00DCD728 /* UIImage+CVPixelBuffer.swift in Sources */,
-				1FB6CE3F22CBABDD00DCD728 /* BoundingBox.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

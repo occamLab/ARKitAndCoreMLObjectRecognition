@@ -77,8 +77,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         //////////////////////////////////////////////////
         // Tap Gesture Recognizer
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.handleTap(gestureRecognize:)))
-        view.addGestureRecognizer(tapGesture)
+        //let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.handleTap(gestureRecognize:)))
+        //view.addGestureRecognizer(tapGesture)
         
         //////////////////////////////////////////////////
         
@@ -226,26 +226,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
     
     // MARK: - Interaction
-    
-    @objc func handleTap(gestureRecognize: UITapGestureRecognizer) {
-        // HIT TEST : REAL WORLD
-        // Get Screen Centre
-        let screenCentre : CGPoint = CGPoint(x: self.sceneView.bounds.midX, y: self.sceneView.bounds.midY)
-        
-        let arHitTestResults : [ARHitTestResult] = sceneView.hitTest(screenCentre, types: [.featurePoint]) // Alternatively, we could use '.existingPlaneUsingExtent' for more grounded hit-test-points.
-        
-        if let closestResult = arHitTestResults.first {
-            // Get Coordinates of HitTest
-            let transform : matrix_float4x4 = closestResult.worldTransform
-            let worldCoord : SCNVector3 = SCNVector3Make(transform.columns.3.x, transform.columns.3.y, transform.columns.3.z)
-            
-            // Create 3D Text
-            let node : SCNNode = createNewBubbleParentNode(latestPrediction)
-            sceneView.scene.rootNode.addChildNode(node)
-            node.position = worldCoord
-        }
-    }
-    
     func createNewBubbleParentNode(_ text : String) -> SCNNode {
         // Warning: Creating 3D Text is susceptible to crashing. To reduce chances of crashing; reduce number of polygons, letters, smoothness, etc.
         
@@ -285,6 +265,22 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         bubbleNodeParent.constraints = [billboardConstraint]
         
         return bubbleNodeParent
+    }
+    
+    //Add a 3d marker at the given location with the given label
+    func add3dLabel(text : String, point : CGPoint){
+        let arHitTestResults : [ARHitTestResult] = sceneView.hitTest(point, types: [.featurePoint]) // Alternatively, we could use '.existingPlaneUsingExtent' for more grounded hit-test-points.
+        
+        if let closestResult = arHitTestResults.first {
+            // Get Coordinates of HitTest
+            let transform : matrix_float4x4 = closestResult.worldTransform
+            let worldCoord : SCNVector3 = SCNVector3Make(transform.columns.3.x, transform.columns.3.y, transform.columns.3.z)
+            
+            // Create 3D Text
+            let node : SCNNode = createNewBubbleParentNode(text)
+            sceneView.scene.rootNode.addChildNode(node)
+            node.position = worldCoord
+        }
     }
     
     // MARK: - CoreML Vision Handling
@@ -445,11 +441,13 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 rect.size.height *= scaleY
                 
                 // Show the bounding box.
-                let label = String(format: "%@ %.1f", labels[prediction.classIndex], prediction.score * 100)
-                let color = colors[prediction.classIndex]
-                boundingBoxes[i].show(frame: rect, label: label, color: color)
+                print("\(prediction) \(labels[prediction.classIndex])")
+                add3dLabel(text: "\(labels[prediction.classIndex]): \(prediction.score * 100)%", point: CGPoint(x: CGFloat(rect.origin.x+(rect.size.width/2)), y: CGFloat(rect.origin.y+(rect.size.height/2))))
+                //let label = String(format: "%@ %.1f", labels[prediction.classIndex], prediction.score * 100)
+                //let color = colors[prediction.classIndex]
+                //boundingBoxes[i].show(frame: rect, label: label, color: color)
             } else {
-                boundingBoxes[i].hide()
+                //boundingBoxes[i].hide()
             }
         }
     }

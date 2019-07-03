@@ -8,7 +8,7 @@ class YOLO {
     public static let maxBoundingBoxes = 10
     
     // Tweak these values to get more or fewer predictions.
-    let confidenceThreshold: Double = 0.6
+    let confidenceThreshold: Double = 0.3
     let iouThreshold: Double = 0.5
     
     struct Prediction {
@@ -40,19 +40,17 @@ class YOLO {
 
         for i in 0..<dim0size {
             
-            var maximumConfidence = 0
+            var maximumConfidence: Double = 0
             var maximumIndex = 0
             
             for j in 0..<dim1size {
                 
-                if Int(features.confidence[[NSNumber(value: i), NSNumber(value: j)]]) > maximumConfidence{
+                if Double(features.confidence[[NSNumber(value: i), NSNumber(value: j)]]) > maximumConfidence{
                     // check this out
-                    maximumConfidence = Int(features.confidence[[NSNumber(value: i), NSNumber(value: j)]])
+                    maximumConfidence = Double(features.confidence[[NSNumber(value: i), NSNumber(value: j)]])
                     maximumIndex = j
                 }
-                
-                print(features.confidence[[NSNumber(value: i), NSNumber(value: j)]])
-                print(features.coordinates[[NSNumber(value: i), NSNumber(value: j)]])
+
             }
             if Double(maximumConfidence) >= confidenceThreshold{
                 //make a prediction with a bounding box, typeformat, and confidence

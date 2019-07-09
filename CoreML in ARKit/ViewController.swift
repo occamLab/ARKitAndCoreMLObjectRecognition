@@ -290,6 +290,29 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         return Double(sqrt(Double(pow((point1.x-point2.x),2))+Double(pow((point1.y-point2.y),2))+Double(pow((point1.z-point2.z),2))))
     }
     
+    func calculatePointCords(yolopoint: CGPoint, view: UIView, sceneView: ARSCNView) -> CGPoint {
+        let viewWidth = view.bounds.width
+        let viewHeight = view.bounds.height
+        
+        // note: image is rotated 90 degrees (or maybe 270 degrees?) with respect to the view
+        let imageWidth = CVPixelBufferGetWidth((sceneView.session.currentFrame?.capturedImage)!)
+        let imageHeight = CVPixelBufferGetHeight((sceneView.session.currentFrame?.capturedImage)!)
+        
+        //calculates the size of the margin around the yolo center crop
+        let cropBorderShortSide = CGFloat((imageHeight-YOLO.inputHeight)/2)
+        let cropBorderLongSide = CGFloat((imageWidth-YOLO.inputWidth)/2)
+        
+        //calculates the cordinates of the identified object origin in the cordinates of the camera image
+        let imageShortDimensionPosition = CGFloat(cropBorderShortSide + (yolopoint.x * CGFloat(YOLO.inputHeight)))
+        let imageLongDimensionPosition = CGFloat(cropBorderLongSide + (yolopoint.y * CGFloat(YOLO.inputWidth)))
+        
+        //corrects the cordinates from the camera image into the cordinates of the AR display view
+        let correctedPixelLocationX = (viewWidth/CGFloat(imageHeight))*imageShortDimensionPosition
+        let correctedPixelLocationy = (viewHeight/CGFloat(imageHeight))*imageLongDimensionPosition
+        
+        return CGPoint(x: correctedPixelLocationX, y: correctedPixelLocationy)
+    }
+    
     // MARK: - CoreML Vision Handling
     
     func loopCoreMLUpdate() {
@@ -421,14 +444,24 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 // on the video preview, which is as wide as the screen and has a 16:9
                 // aspect ratio. The video preview also may be letterboxed at the top
                 // and bottom.
-                let viewWidth = view.bounds.width
-                let viewHeight = view.bounds.height
             
-                // note: image is rotated 90 degrees (or maybe 270 degrees?) with respect to the view
-                let imageWidth = CVPixelBufferGetWidth((sceneView.session.currentFrame?.capturedImage)!)
-                let imageHeight = CVPixelBufferGetHeight((sceneView.session.currentFrame?.capturedImage)!)
+                //corrects the origin of the bounding box which was given by YOLO
+                let origin = calculatePointCords(yolopoint: CGPoint(x: prediction.rect.origin.x, y: prediction.rect.origin.y), view: view, sceneView: sceneView)
             
-                let scaleX = viewWidth / CGFloat(YOLO.inputWidth)
+                //finds the location of reletive corners of the bounding box so that the actual cordinates of the bounding box can be found
+                let minXminY = calculatePointCords(yolopoint: CGPoint(x: prediction.rect.minX, y: prediction.rect.minY), view: view, sceneView: sceneView)
+                let maxXminY = calculatePointCords(yolopoint: CGPoint(x: prediction.rect.maxX, y: prediction.rect.minY), view: view, sceneView: sceneView)
+                let minXmaxY = calculatePointCords(yolopoint: CGPoint(x: prediction.rect.minX, y: prediction.rect.maxY), view: view, sceneView: sceneView)
+            
+                //calculates the width and height of the bounding box.
+                let correctedBoundingBoxWidth = maxXminY.x - minXminY.x
+                let correctedBoundingBoxHeight = minXmaxY.y - minXminY.y
+
+            
+                //adds a label to the found object.
+                add3dLabel(label: String(labels[prediction.classIndex]), certanty: String(prediction.score * 100), point: CGPoint(x: CGFloat(origin.x+(correctedBoundingBoxWidth/2)), y: CGFloat(origin.y+(correctedBoundingBoxHeight/2))))
+            
+                /*let scaleX = viewWidth / CGFloat(YOLO.inputWidth)
                 let scaleY = viewHeight / CGFloat(YOLO.inputHeight)
                 let top = (view.bounds.height - viewHeight) / 2
                 
@@ -444,7 +477,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 print("prediction \(prediction.rect) rect \(rect) \(labels[prediction.classIndex])")
             
                 //places a node at the center of the bounding box given
-            add3dLabel(label: String(labels[prediction.classIndex]), certanty: String(prediction.score * 100), point: CGPoint(x: CGFloat(rect.origin.x+(rect.size.width/2)), y: CGFloat(rect.origin.y+(rect.size.height/2))))
+            add3dLabel(label: String(labels[prediction.classIndex]), certanty: String(prediction.score * 100), point: CGPoint(x: CGFloat(rect.origin.x+(rect.size.width/2)), y: CGFloat(rect.origin.y+(rect.size.height/2))))*/
 
         }
     }

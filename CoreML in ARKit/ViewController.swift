@@ -308,7 +308,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         //corrects the cordinates from the camera image into the cordinates of the AR display view
         let correctedPixelLocationX = (viewWidth/CGFloat(imageHeight))*imageShortDimensionPosition
-        let correctedPixelLocationy = (viewHeight/CGFloat(imageHeight))*imageLongDimensionPosition
+        let correctedPixelLocationy = (viewHeight/CGFloat(imageWidth))*imageLongDimensionPosition
         
         return CGPoint(x: correctedPixelLocationX, y: correctedPixelLocationy)
     }

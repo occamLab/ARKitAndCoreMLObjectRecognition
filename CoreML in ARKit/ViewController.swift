@@ -71,9 +71,26 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     let bubbleDepth : Float = 0.01 // the 'depth' of 3D text
     var latestPrediction : String = "…" // a variable containing the latest CoreML prediction
     
+    @IBOutlet weak var queryEnvButton: UIButton!
+    
+    @IBAction func queryEnvironment(_ sender: Any) {
+        //iterate throguh the nodes in the scene
+        for child:SCNNode in sceneView.scene.rootNode.childNodes{
+            
+            //if the node is close enough to the user
+            if d3Distance(sceneView.pointOfView?.camera, child) < threshold{
+                //generate audio for the node
+                let audioSource = SCNAudioSource()
+                audioSource.load()
+                // Create a player from the source and add it to `objectNode`
+                child.addAudioPlayer(SCNAudioPlayer(source: audioSource))
+                //wait till the sound is over
+            }
+        }
+    }
+    
     // COREML
     let dispatchQueueML = DispatchQueue(label: "com.hw.dispatchqueueml") // A Serial Queue
-    @IBOutlet weak var debugTextView: UITextView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -328,43 +345,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
     }
     
-    func classificationCompleteHandler(request: VNRequest, error: Error?) {
-        // Catch Errors
-        if error != nil {
-            print("Error: " + (error?.localizedDescription)!)
-            return
-        }
-        guard let observations = request.results else {
-            print("No results")
-            return
-        }
-        
-        // Get Classifications
-        let classifications = observations[0...1] // top 2 results
-            .flatMap({ $0 as? VNClassificationObservation })
-            .map({ "\($0.identifier) \(String(format:"- %.2f", $0.confidence))" })
-            .joined(separator: "\n")
-        
-        
-        DispatchQueue.main.async {
-            // Print Classifications
-            print(classifications)
-            print("--")
-            
-            // Display Debug Text on screen
-            var debugText:String = ""
-            debugText += classifications
-            self.debugTextView.text = debugText
-            
-            // Store the latest prediction
-            var objectName:String = "…"
-            objectName = classifications.components(separatedBy: "-")[0]
-            objectName = objectName.components(separatedBy: ",")[0]
-            self.latestPrediction = objectName
-            
-        }
-    }
-    
     //attempts to find an sub image in the greater image
     func predict(image: UIImage) {
         if let pixelBuffer = image.pixelBuffer(width: YOLO.inputWidth, height: YOLO.inputHeight) {
@@ -460,24 +440,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             
                 //adds a label to the found object.
                 add3dLabel(label: String(labels[prediction.classIndex]), certanty: String(prediction.score * 100), point: CGPoint(x: CGFloat(origin.x+(correctedBoundingBoxWidth/2)), y: CGFloat(origin.y+(correctedBoundingBoxHeight/2))))
-            
-                /*let scaleX = viewWidth / CGFloat(YOLO.inputWidth)
-                let scaleY = viewHeight / CGFloat(YOLO.inputHeight)
-                let top = (view.bounds.height - viewHeight) / 2
-                
-                // Translate and scale the rectangle to our own coordinate system based around the screen size
-                var rect = prediction.rect
-                rect.origin.x *= scaleX
-                rect.origin.y *= scaleY
-                rect.origin.y += top
-                rect.size.width *= scaleX
-                rect.size.height *= scaleY
-                
-                // print the prediction to the console
-                print("prediction \(prediction.rect) rect \(rect) \(labels[prediction.classIndex])")
-            
-                //places a node at the center of the bounding box given
-            add3dLabel(label: String(labels[prediction.classIndex]), certanty: String(prediction.score * 100), point: CGPoint(x: CGFloat(rect.origin.x+(rect.size.width/2)), y: CGFloat(rect.origin.y+(rect.size.height/2))))*/
 
         }
     }

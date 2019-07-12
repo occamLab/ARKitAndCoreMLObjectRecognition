@@ -10,7 +10,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "CoreML in ARKit/YOLO.swift"
-            timestampString = "584633284.704275"
+            timestampString = "584639350.5094661"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "25"
@@ -26,7 +26,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "CoreML in ARKit/ViewController.swift"
-            timestampString = "584633284.704726"
+            timestampString = "584656533.383073"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "104"
@@ -42,12 +42,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "CoreML in ARKit/ViewController.swift"
-            timestampString = "584633284.705627"
+            timestampString = "584656533.383667"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "334"
-            endingLineNumber = "334"
-            landmarkName = "displayImage(buffer:debugImageView:)"
+            startingLineNumber = "314"
+            endingLineNumber = "314"
+            landmarkName = "add3dLabel(label:certanty:point:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -58,12 +58,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "CoreML in ARKit/ViewController.swift"
-            timestampString = "584633284.7063839"
+            timestampString = "584656533.3842"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "333"
-            endingLineNumber = "333"
-            landmarkName = "displayImage(buffer:debugImageView:)"
+            startingLineNumber = "313"
+            endingLineNumber = "313"
+            landmarkName = "add3dLabel(label:certanty:point:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -74,12 +74,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "CoreML in ARKit/ViewController.swift"
-            timestampString = "584633284.70708"
+            timestampString = "584656533.384684"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "199"
-            endingLineNumber = "199"
-            landmarkName = "setUpVision()"
+            startingLineNumber = "510"
+            endingLineNumber = "510"
+            landmarkName = "show(predictions:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -90,12 +90,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "CoreML in ARKit/ViewController.swift"
-            timestampString = "584633284.707743"
+            timestampString = "584656533.385151"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "518"
-            endingLineNumber = "518"
-            landmarkName = "updateCoreML()"
+            startingLineNumber = "478"
+            endingLineNumber = "478"
+            landmarkName = "showOnMainThread(_:_:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -106,12 +106,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "CoreML in ARKit/ViewController.swift"
-            timestampString = "584633284.708427"
+            timestampString = "584656533.385628"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "494"
-            endingLineNumber = "494"
-            landmarkName = "updateCoreML()"
+            startingLineNumber = "485"
+            endingLineNumber = "485"
+            landmarkName = "show(predictions:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -122,12 +122,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "CoreML in ARKit/ViewController.swift"
-            timestampString = "584633284.709112"
+            timestampString = "584656533.386142"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "475"
-            endingLineNumber = "475"
-            landmarkName = "updateCoreML()"
+            startingLineNumber = "401"
+            endingLineNumber = "401"
+            landmarkName = "loopCoreMLUpdate()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -138,12 +138,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "CoreML in ARKit/ViewController.swift"
-            timestampString = "584633284.7098221"
+            timestampString = "584656533.386627"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "482"
-            endingLineNumber = "482"
-            landmarkName = "updateCoreML()"
+            startingLineNumber = "399"
+            endingLineNumber = "399"
+            landmarkName = "loopCoreMLUpdate()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -154,12 +154,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "CoreML in ARKit/ViewController.swift"
-            timestampString = "584633284.7105041"
+            timestampString = "584656533.387102"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "398"
-            endingLineNumber = "398"
-            landmarkName = "predict(pixelBuffer:inflightIndex:)"
+            startingLineNumber = "407"
+            endingLineNumber = "407"
+            landmarkName = "predict(pixelBuffer:inflightIndex:imageProcessingSetting:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -170,12 +170,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "CoreML in ARKit/ViewController.swift"
-            timestampString = "584633284.711184"
+            timestampString = "584656533.387566"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "396"
-            endingLineNumber = "396"
-            landmarkName = "predict(pixelBuffer:inflightIndex:)"
+            startingLineNumber = "443"
+            endingLineNumber = "443"
+            landmarkName = "predict(pixelBuffer:inflightIndex:imageProcessingSetting:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -186,12 +186,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "CoreML in ARKit/ViewController.swift"
-            timestampString = "584633284.711856"
+            timestampString = "584656533.387951"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "404"
-            endingLineNumber = "404"
-            landmarkName = "predict(pixelBuffer:inflightIndex:)"
+            startingLineNumber = "379"
+            endingLineNumber = "379"
+            landmarkName = "calculatePointCords(yoloPoint:view:sceneView:imageProcessingSetting:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

@@ -70,6 +70,9 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     //the distance from the user in Metres that objects will be announced from.
     let queryRange = 1.5
     
+    //can be either "crop" (lower area of effect) to perform processing on a selection of the area from the center of the screen or "scaleFit" to scale the whole image into the proper size and perform image processing on the whole image (lower resoulution)
+    let imageProcessingSetting = "scaleFit"
+    
     
     //MARK: Outlet
     // SCENE
@@ -312,7 +315,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             sceneView.scene.rootNode.addChildNode(node)
             //seet the position to be equal to the average node position
             node.position = SCNVector3(nodePositionSum.x/Float(nodeNumber),nodePositionSum.y/Float(nodeNumber),nodePositionSum.z/Float(nodeNumber))
-            print("world \(worldCoord) actual \(node.position)")
+            print("label \(label) certanty \(round(1000*certanty)/10) world \(worldCoord) actual \(node.position)")
         }
     }
     
@@ -337,29 +340,52 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
     
     //calculate the cordinates for the a given point in the small image in the chordiantes of the view
-    func calculatePointCords(yolopoint: CGPoint, view: UIView, sceneView: ARSCNView) -> CGPoint {
-        let viewWidth = view.bounds.width
-        let viewHeight = view.bounds.height
+    func calculatePointCords(yoloPoint: CGPoint, view: UIView, sceneView: ARSCNView, imageProcessingSetting: String) -> CGPoint? {
+        let viewShort = view.bounds.width
+        let viewLong = view.bounds.height
         
         //displayImage(buffer: (sceneView.session.currentFrame?.capturedImage)!, debugImageView: debugImageView)
         
         // note: image is rotated 90 degrees (or maybe 270 degrees?) with respect to the view
-        let imageWidth = CVPixelBufferGetWidth((sceneView.session.currentFrame?.capturedImage)!)
-        let imageHeight = CVPixelBufferGetHeight((sceneView.session.currentFrame?.capturedImage)!)
+        let imageLong = CVPixelBufferGetWidth((sceneView.session.currentFrame?.capturedImage)!)
+        let imageShort = CVPixelBufferGetHeight((sceneView.session.currentFrame?.capturedImage)!)
         
-        //calculates the size of the margin around the yolo center crop
-        let cropBorderShortSide = CGFloat((imageHeight-YOLO.inputHeight)/2)
-        let cropBorderLongSide = CGFloat((imageWidth-YOLO.inputWidth)/2)
+        let YOLOSize = YOLO.inputHeight
         
-        //calculates the cordinates of the identified object origin in the cordinates of the camera image
-        let imageShortDimensionPosition = CGFloat(cropBorderShortSide + (yolopoint.x * CGFloat(YOLO.inputHeight)))
-        let imageLongDimensionPosition = CGFloat(cropBorderLongSide + (yolopoint.y * CGFloat(YOLO.inputWidth)))
         
-        //corrects the cordinates from the camera image into the cordinates of the AR display view
-        let correctedPixelLocationX = (viewWidth/CGFloat(imageHeight))*imageShortDimensionPosition
-        let correctedPixelLocationy = (viewHeight/CGFloat(imageWidth))*imageLongDimensionPosition
+        switch imageProcessingSetting{
+        case "crop":
+            
+            let imagePixelLocationShort = yoloPoint.x * CGFloat(YOLOSize) + CGFloat((imageShort-YOLOSize)/2)
+            let imagePixelLocationLong = yoloPoint.y * CGFloat(YOLOSize) + CGFloat((imageLong-YOLOSize)/2)
+            
+            let viewPixelLocationShort = CGFloat(viewShort)/CGFloat(imageShort) * imagePixelLocationShort
+            
+            let viewPixelLocationLong = CGFloat(viewLong)/CGFloat(imageLong) * imagePixelLocationLong
+            
+            print("x \(viewPixelLocationShort), y \(viewPixelLocationLong)")
+            
+            return CGPoint(x: viewPixelLocationShort, y: viewPixelLocationLong)
+        case "scaleFit":
+            let imagePixelLocationShort = yoloPoint.x * CGFloat(YOLOSize) * CGFloat(imageLong/YOLOSize)
+            let imagePixelLocationLong = yoloPoint.y * CGFloat(YOLOSize) * CGFloat(imageLong/YOLOSize)
+
+            let viewPixelLocationShort = CGFloat(viewShort)/CGFloat(imageShort) * imagePixelLocationShort
+            
+            let viewPixelLocationLong = CGFloat(viewLong)/CGFloat(imageLong) * imagePixelLocationLong
+            
+            //print("x \(viewPixelLocationShort), y \(viewPixelLocationLong)")
+            
+            return CGPoint(x: viewPixelLocationShort, y: viewPixelLocationLong)
+            
+            
+            
+        default:
+            print("passed improper scaling option to calculatePointCoords")
+            return nil
+        }
         
-        return CGPoint(x: correctedPixelLocationX, y: correctedPixelLocationy)
+        
     }
     
     // MARK: - CoreML Vision Handling
@@ -377,7 +403,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
     }
 
-    func predict(pixelBuffer: CVPixelBuffer, inflightIndex: Int) {
+    func predict(pixelBuffer: CVPixelBuffer, inflightIndex: Int, imageProcessingSetting:String) {
         // Measure how long it takes to predict a single video frame.
         let startTime = CACurrentMediaTime()
         
@@ -389,19 +415,33 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         // Resize the input with Core Image to 416x416.
         if let resizedPixelBuffer = resizedPixelBuffers[inflightIndex] {
             let ciImage = CIImage(cvPixelBuffer: pixelBuffer)
-            let sx = CGFloat(YOLO.inputWidth) / CGFloat(CVPixelBufferGetWidth(pixelBuffer))
-            let sy = CGFloat(YOLO.inputHeight) / CGFloat(CVPixelBufferGetHeight(pixelBuffer))
-            let scaleTransform = CGAffineTransform(scaleX: sx, y: sy)
-            let scaledImage = ciImage.transformed(by: scaleTransform)
-            let orientedImage = scaledImage.oriented(CGImagePropertyOrientation.right)
-            ciContext.render(orientedImage, to: resizedPixelBuffer)
+            var orientedImage: CIImage?
+            switch imageProcessingSetting {
+            case "crop":
+                let croppedImage = ciImage.cropped(to: CGRect(x: (ciImage.extent.size.width/2)-CGFloat(YOLO.inputHeight/2), y: (ciImage.extent.size.height/2)-CGFloat(YOLO.inputWidth/2), width: CGFloat(YOLO.inputHeight), height: CGFloat(YOLO.inputWidth)))
+                orientedImage = croppedImage.oriented(CGImagePropertyOrientation.right)
+            case "scaleFit" :
+                let sy = CGFloat(YOLO.inputHeight) / CGFloat(ciImage.extent.size.width)
+                let sx = sy
+                let scaleTransform = CGAffineTransform(scaleX: sx, y: sy)
+                let scaledImage = ciImage.transformed(by: scaleTransform)
+                orientedImage = scaledImage.oriented(CGImagePropertyOrientation.right)
+
+            default :
+                orientedImage = nil
+                print("improper imageProcessingSetting in Predict(pixelBuffer: ...")
+                return
+            }
+
+            
+            ciContext.render(orientedImage!, to: resizedPixelBuffer)
             //ciContext.render(ciImage, to: resizedPixelBuffer)
             
             // Give the resized input to our model.
             if let result = try? yolo.predict(image: resizedPixelBuffer){
                 let elapsed = CACurrentMediaTime() - startTime
                 showOnMainThread(result, elapsed)
-                displayImage(buffer: resizedPixelBuffer,debugImageView: debugImageView)
+                displayImage(buffer: resizedPixelBuffer, debugImageView: debugImageView)
             } else {
                 //if the model could not find anything
                 print("BOGUS")
@@ -454,20 +494,20 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 // and bottom.
             
                 //corrects the origin of the bounding box which was given by YOLO
-                let origin = calculatePointCords(yolopoint: CGPoint(x: prediction.rect.origin.x, y: prediction.rect.origin.y), view: view, sceneView: sceneView)
+            let origin = calculatePointCords(yoloPoint: CGPoint(x: prediction.rect.origin.x, y: prediction.rect.origin.y), view: view, sceneView: sceneView, imageProcessingSetting: imageProcessingSetting)
             
                 //finds the location of reletive corners of the bounding box so that the actual cordinates of the bounding box can be found
-                let minXminY = calculatePointCords(yolopoint: CGPoint(x: prediction.rect.minX, y: prediction.rect.minY), view: view, sceneView: sceneView)
-                let maxXminY = calculatePointCords(yolopoint: CGPoint(x: prediction.rect.maxX, y: prediction.rect.minY), view: view, sceneView: sceneView)
-                let minXmaxY = calculatePointCords(yolopoint: CGPoint(x: prediction.rect.minX, y: prediction.rect.maxY), view: view, sceneView: sceneView)
+                let minXminY = calculatePointCords(yoloPoint: CGPoint(x: prediction.rect.minX, y: prediction.rect.minY), view: view, sceneView: sceneView, imageProcessingSetting: self.imageProcessingSetting)
+            let maxXminY = calculatePointCords(yoloPoint: CGPoint(x: prediction.rect.maxX, y: prediction.rect.minY), view: view, sceneView: sceneView, imageProcessingSetting: self.imageProcessingSetting)
+            let minXmaxY = calculatePointCords(yoloPoint: CGPoint(x: prediction.rect.minX, y: prediction.rect.maxY), view: view, sceneView: sceneView, imageProcessingSetting: self.imageProcessingSetting)
             
                 //calculates the width and height of the bounding box.
-                let correctedBoundingBoxWidth = maxXminY.x - minXminY.x
-                let correctedBoundingBoxHeight = minXmaxY.y - minXminY.y
+            let correctedBoundingBoxWidth = maxXminY!.x - minXminY!.x
+            let correctedBoundingBoxHeight = minXmaxY!.y - minXminY!.y
 
             
                 //adds a label to the found object.
-                add3dLabel(label: String(labels[prediction.classIndex]), certanty: prediction.score, point: CGPoint(x: CGFloat(origin.x+(correctedBoundingBoxWidth/2)), y: CGFloat(origin.y+(correctedBoundingBoxHeight/2))))
+            add3dLabel(label: String(labels[prediction.classIndex]), certanty: prediction.score, point: CGPoint(x: CGFloat(origin!.x+(correctedBoundingBoxWidth/2)), y: CGFloat(origin!.y+(correctedBoundingBoxHeight/2))))
 
         }
     }
@@ -496,7 +536,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             // For better throughput, perform the prediction on a concurrent
             // background queue instead of on the serial VideoCapture queue.
             DispatchQueue.global().async {
-                self.predict(pixelBuffer: pixbuff!, inflightIndex: inflightIndex)
+                self.predict(pixelBuffer: pixbuff!, inflightIndex: inflightIndex, imageProcessingSetting: self.imageProcessingSetting)
             }
         }
         

@@ -39,11 +39,14 @@ class SCNIdentifiedObject: SCNNode {
 
 class ViewController: UIViewController, ARSCNViewDelegate {
     
+    // Line 1. Create an instance of AVSpeechSynthesizer.
+    var speechSynthesizer = AVSpeechSynthesizer()
+    
     // true: use Vision to drive Core ML, false: use plain Core ML
     let useVision = false
     
     //Dictates the radius in which nodes will be combined distance in in meteres
-    let recombiningThreshold: Double = 0.3
+    let recombiningThreshold: Double = 0.5
     
     // How many predictions we can do concurrently.
     static let maxInflightBuffers = 3
@@ -64,27 +67,43 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     var inflightBuffer = 0
     
+    //the distance from the user in Metres that objects will be announced from.
+    let queryRange = 1.5
     
     
+    //MARK: Outlet
     // SCENE
     @IBOutlet var sceneView: ARSCNView!
     let bubbleDepth : Float = 0.01 // the 'depth' of 3D text
     var latestPrediction : String = "…" // a variable containing the latest CoreML prediction
     
+    @IBOutlet weak var debugImageView: UIImageView!
     @IBOutlet weak var queryEnvButton: UIButton!
     
     @IBAction func queryEnvironment(_ sender: Any) {
         //iterate throguh the nodes in the scene
         for child:SCNNode in sceneView.scene.rootNode.childNodes{
             
-            //if the node is close enough to the user
-            if d3Distance(sceneView.pointOfView?.camera, child) < threshold{
-                //generate audio for the node
-                let audioSource = SCNAudioSource()
-                audioSource.load()
-                // Create a player from the source and add it to `objectNode`
-                child.addAudioPlayer(SCNAudioPlayer(source: audioSource))
-                //wait till the sound is over
+            if let child = child as? SCNIdentifiedObject, let pov = sceneView.pointOfView {
+                //creates a node at the location o f the camera foruse in distance calcualtions
+                //let selfNode = SCNNode()
+                //sceneView.pointOfView?.addChildNode(selfNode)
+                
+                
+                //if the node is close enough to the user
+                if d3Distance(pov.position, child.position) <= Double(queryRange){
+                    // Line 2. Create an instance of AVSpeechUtterance and pass in a String to be spoken.
+                    let speechUtterance: AVSpeechUtterance = AVSpeechUtterance(string: "\(child.objectName!) accurate. Distance: \(round(10*d3Distance(pov.position, child.position))/10) meters.")
+                    //Line 3. Specify the speech utterance rate. 1 = speaking extremely slowly The higher the values the slower speech patterns. The default rate, AVSpeechUtteranceDefaultSpeechRate is 0.5
+                    speechUtterance.rate = 0.5
+                    // Line 4. Specify the voice. It is explicitly set to English here, but it will use the device default if not specified.
+                    speechUtterance.voice = AVSpeechSynthesisVoice(language: "en-US")
+                    // Line 5. Pass in the urrerance to the synthesizer to actually speak.
+                    speechSynthesizer.speak(speechUtterance)
+                }
+                
+                //deletes the node created at the camera
+                //selfNode.removeFromParentNode()
             }
         }
     }
@@ -109,11 +128,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         // Enable Default Lighting - makes the 3D text a bit poppier.
         sceneView.autoenablesDefaultLighting = true
-        
-        //////////////////////////////////////////////////
-        // Tap Gesture Recognizer
-        //let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.handleTap(gestureRecognize:)))
-        //view.addGestureRecognizer(tapGesture)
         
         //////////////////////////////////////////////////
         setUpCoreImage()
@@ -155,16 +169,16 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         // one pixel buffer will hold one image section which we are going to be checking. thius one pixel buffer is an 'image' or image section representing one object
         for _ in 0..<YOLO.maxBoundingBoxes {
             //CVPixel Buffer is an image stored as pixels
-            var resizedPixelBuffer: CVPixelBuffer?
+            var emptyPixelBuffer: CVPixelBuffer?
             let status = CVPixelBufferCreate(nil, YOLO.inputWidth, YOLO.inputHeight,
                                              kCVPixelFormatType_32BGRA, nil,
-                                             &resizedPixelBuffer)
+                                             &emptyPixelBuffer)
             //error handeling
             if status != kCVReturnSuccess {
                 print("Error: could not create resized pixel buffer", status)
             }
             //add the pixel buffer/image
-            resizedPixelBuffers.append(resizedPixelBuffer)
+            resizedPixelBuffers.append(emptyPixelBuffer)
         }
     }
     
@@ -182,7 +196,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             // NOTE: If you choose another crop/scale option, then you must also
             // change how the BoundingBox objects get scaled when they are drawn.
             // Currently they assume the full input image is used.
-            request.imageCropAndScaleOption = .centerCrop
+            request.imageCropAndScaleOption = .scaleFill
             requests.append(request)
         }
     }
@@ -265,8 +279,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
     
     //Add a 3d marker at the given location with the given label
-    func add3dLabel(label: String, certanty : String, point : CGPoint){
-        print(point)
+    func add3dLabel(label: String, certanty : Float, point : CGPoint){
+        //print(point)
         //let arRaycast = sceneView.session.raycastQuery(from: point, allowing: .estimatedPlane, alignment: .any)
         let arHitTestResults : [ARHitTestResult] = sceneView.hitTest(point, types: [.featurePoint]) // Alternatively, we could use '.existingPlaneUsingExtent' for more grounded hit-test-points.
         if let closestResult = arHitTestResults.first {
@@ -294,7 +308,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             }
             
             //creates the new node to have tha average position of all of the found nodes
-            let node : SCNNode = createNewBubbleParentNode("\(label): \(certanty)%")
+            let node : SCNNode = createNewBubbleParentNode("\(label): \(round(1000*certanty)/10)%")
             sceneView.scene.rootNode.addChildNode(node)
             //seet the position to be equal to the average node position
             node.position = SCNVector3(nodePositionSum.x/Float(nodeNumber),nodePositionSum.y/Float(nodeNumber),nodePositionSum.z/Float(nodeNumber))
@@ -307,9 +321,27 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         return Double(sqrt(Double(pow((point1.x-point2.x),2))+Double(pow((point1.y-point2.y),2))+Double(pow((point1.z-point2.z),2))))
     }
     
+    //displays a CVPixelBuffer to the image debugger
+    func displayImage(buffer: CVPixelBuffer, debugImageView: UIImageView) -> Int{
+        
+        //convert the buffer to a CIImage
+        let ciimage = CIImage(cvImageBuffer: buffer)
+        
+        //Convert into a UIImage
+        let image = UIImage(ciImage: ciimage)
+        
+        //display the image
+        debugImageView.image = image
+        
+        return 0
+    }
+    
+    //calculate the cordinates for the a given point in the small image in the chordiantes of the view
     func calculatePointCords(yolopoint: CGPoint, view: UIView, sceneView: ARSCNView) -> CGPoint {
         let viewWidth = view.bounds.width
         let viewHeight = view.bounds.height
+        
+        //displayImage(buffer: (sceneView.session.currentFrame?.capturedImage)!, debugImageView: debugImageView)
         
         // note: image is rotated 90 degrees (or maybe 270 degrees?) with respect to the view
         let imageWidth = CVPixelBufferGetWidth((sceneView.session.currentFrame?.capturedImage)!)
@@ -344,16 +376,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         }
         
     }
-    
-    //attempts to find an sub image in the greater image
-    func predict(image: UIImage) {
-        if let pixelBuffer = image.pixelBuffer(width: YOLO.inputWidth, height: YOLO.inputHeight) {
-            //fills a pixel buffer with a sub image
-            predict(pixelBuffer: pixelBuffer, inflightIndex: 0)
-        }
-    }
-    
-    
+
     func predict(pixelBuffer: CVPixelBuffer, inflightIndex: Int) {
         // Measure how long it takes to predict a single video frame.
         let startTime = CACurrentMediaTime()
@@ -370,13 +393,15 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             let sy = CGFloat(YOLO.inputHeight) / CGFloat(CVPixelBufferGetHeight(pixelBuffer))
             let scaleTransform = CGAffineTransform(scaleX: sx, y: sy)
             let scaledImage = ciImage.transformed(by: scaleTransform)
-            ciContext.render(scaledImage, to: resizedPixelBuffer)
-            
+            let orientedImage = scaledImage.oriented(CGImagePropertyOrientation.right)
+            ciContext.render(orientedImage, to: resizedPixelBuffer)
+            //ciContext.render(ciImage, to: resizedPixelBuffer)
             
             // Give the resized input to our model.
             if let result = try? yolo.predict(image: resizedPixelBuffer){
                 let elapsed = CACurrentMediaTime() - startTime
                 showOnMainThread(result, elapsed)
+                displayImage(buffer: resizedPixelBuffer,debugImageView: debugImageView)
             } else {
                 //if the model could not find anything
                 print("BOGUS")
@@ -403,6 +428,9 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
     
     func visionRequestDidComplete(request: VNRequest, error: Error?) {
+        //print(request.results)
+        
+        //breakpoint
         
     }
     
@@ -439,7 +467,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
 
             
                 //adds a label to the found object.
-                add3dLabel(label: String(labels[prediction.classIndex]), certanty: String(prediction.score * 100), point: CGPoint(x: CGFloat(origin.x+(correctedBoundingBoxWidth/2)), y: CGFloat(origin.y+(correctedBoundingBoxHeight/2))))
+                add3dLabel(label: String(labels[prediction.classIndex]), certanty: prediction.score, point: CGPoint(x: CGFloat(origin.x+(correctedBoundingBoxWidth/2)), y: CGFloat(origin.y+(correctedBoundingBoxHeight/2))))
 
         }
     }

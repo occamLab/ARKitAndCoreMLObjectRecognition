@@ -1,73 +1,16 @@
 # CoreML-in-ARKit
-This simple project detects objects in Augmented Reality and displays 3D labels on top of them. This serves as a basic template for an ARKit project to use CoreML.
+This is a project designed to use machine learning, specifically the YOLO v3 databaseto create an object recognition and localization app for the blind and visually impaired. The App uses the YOLO v3 model to identify objects. Then it uses ARKit to place 3d Labels into the scene at the locations of the identified objects.
 
-![image of scene with 3d labels on objects](post-media/giphy.gif)
+Combining MLCore and ARKit was based off of this example project, [http://machinethink.net/blog/object-detection-with-yolo/](https://github.com/hanleyweng/CoreML-in-ARKit), which could place 3d labels on the objects returned from an ML model.
 
-[Demo Video - on Youtube](https://www.youtube.com/watch?v=RjIbiAC8cBk)
+The application of YOLOv3 in this project was based off of the implementation of YOLOv3 in Swift here: [https://github.com/Ma-Dan/YOLOv3-CoreML](https://github.com/Ma-Dan/YOLOv3-CoreML)
 
-Model: Inception V3
+For a detailed description of how the YOLO method works plsease see either his blog post: [http://machinethink.net/blog/object-detection-with-yolo/](http://machinethink.net/blog/object-detection-with-yolo/) or the orginal creators of YOLOv3 here: [https://pjreddie.com/darknet/yolo/](https://pjreddie.com/darknet/yolo/)
 
-Language: Swift 4.0
+This app was designed to provide an automated alternattive for the Olin Occam Lab's (View share program)[] and their objectLocator program()[https://github.com/occamLab/AutomaticObjectDetection](https://github.com/occamLab/ObjectLocator)
 
-Written in: Xcode 9.0 GM (9A235) (Updated) ~~XCode 9 beta 3 (9M174d)~~
+## Instructions For Developers
 
-Content Technology: SceneKit
-
-Tested on iPhone 7 plus running iOS 11 beta 3 (15A5318g)
-
-Note: SceneKit can achieve a 60 FPS on iPhone7+ - though when it gets hot, it'll drop to 30 FPS.
-
-## Instructions
-
-You'll have to download "Inceptionv3.mlmodel" from [Apple's Machine Learning page](https://developer.apple.com/machine-learning/), and copy it into your XCode project. (As depicted in the following gif)
-
-![Gif to show dragging and dropping of model into XCode](post-media/AddingMLModel.gif)
-
-[_(Gif via Atomic14)_](https://github.com/atomic14/VisionCoreMLSample)
-
+If you want to use this code to develop your own project: clone or fork this repo
+You'll have to download "YOLOv3" from [Apple's Machine Learning page](https://developer.apple.com/machine-learning/models/), and copy it into your XCode project.
 If you're having issues, double check that the model is part of a target [(source: stackoverflow)](https://stackoverflow.com/questions/45884085/model-is-not-part-of-any-target-add-the-model-to-a-target-to-enable-generation).
-
-## Footnotes
-
-- SceneKit Text Labels are expensive to render. Too many polygons (too much text, smoothness, characters) - can cause crashes. In future, SpriteKit would be more efficient for text-labels.
-
-- Not entirely certain if the code is actually transferring RGB data to the Vision Model (as opposed to YUV). Proof-of-concept-wise, it appears to work just fine with the Inception V3 model for now.
-
-- Whilst ARKit's FPS , is displayed - CoreML's speed is not. However, it does appear sufficiently fast for real-time ARKit applications.
-
-- Placement of the label is simply determined by the raycast screen centre-point to a ARKit feature-point. This could be altered for more stable placement.
-
-## Building Blocks (Overview)
-
-### Get CoreML running in real time in ARKit
-
-- There are some good tutorials / sample projects for getting CoreML running. See: [[ 1 ]](https://github.com/atomic14/VisionCoreMLSample) [[ 2 ]](https://github.com/yulingtianxia/Core-ML-Sample) [[ 3 ]](http://www.stringcode.co.uk/mlcamera/)
-
-- What we do differently here is we're using ARKit's ARFrame as the image to be fed into CoreML.
-
-```
-let pixbuff : CVPixelBuffer? = (sceneView.session.currentFrame?.capturedImage)
-```
-
-- We also use Threading to continuously run requests to CoreML in realtime, and without disturbing ARKit / SceneView
-
-```
-let dispatchQueueML = DispatchQueue(label: "com.hw.dispatchqueueml")
-...
-loopCoreMLUpdate() // on viewLoad
-...
-func loopCoreMLUpdate() {
-    dispatchQueueML.async {
-        // 1. Run Update.
-        self.updateCoreML()
-        // 2. Loop this function.
-        self.loopCoreMLUpdate()
-    }
-}
-```
-
-### Add 3D Text
-
-- Add a Tap Gesture.
-- On Tap. Get the raycast centre point, translating it to appropriate coordinates.
-- Render 3D text at that location. Use the most likely object.

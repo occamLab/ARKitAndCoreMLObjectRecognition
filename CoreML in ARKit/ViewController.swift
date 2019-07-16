@@ -45,6 +45,9 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     // true: use Vision to drive Core ML, false: use plain Core ML
     let useVision = false
     
+    //variable describes whether or not to keep fixed object points or to attempt to live update the position of the objects. in the scene.
+    var updatePosition = true
+    
     //Dictates the radius in which nodes will be combined distance in in meteres
     let recombiningThreshold: Double = 0.5
     
@@ -75,7 +78,19 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     
     //MARK: Outlet
+    
     // SCENE
+    
+    @IBOutlet weak var updatePositionsSwitch: UISwitch!
+    
+    @IBAction func updatePositionsToggle(_ sender: Any) {
+        if updatePosition == true {
+            updatePosition = false
+        }else {
+            updatePosition = true
+        }
+    }
+    
     @IBOutlet var sceneView: ARSCNView!
     let bubbleDepth : Float = 0.01 // the 'depth' of 3D text
     var latestPrediction : String = "…" // a variable containing the latest CoreML prediction
@@ -282,7 +297,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
     
     //Add a 3d marker at the given location with the given label
-    func add3dLabel(label: String, certanty : Float, point : CGPoint){
+    func add3dLabel(label: String, certanty : Float, point : CGPoint, updatePosition: Bool){
         //print(point)
         //let arRaycast = sceneView.session.raycastQuery(from: point, allowing: .estimatedPlane, alignment: .any)
         let arHitTestResults : [ARHitTestResult] = sceneView.hitTest(CGPoint(x: point.x,y: point.y), types: [.featurePoint]) // Alternatively, we could use '.existingPlaneUsingExtent' for more grounded hit-test-points.
@@ -294,28 +309,37 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             
             //variables holding the sum of the positions of the nearby nodes and the number of nodes referencing the same object. these are used for calculating averages
             var nodePositionSum: SCNVector3 = worldCoord
-            var nodeNumber: Int = 1
+            var nodeNumber: Int? = 1
             
             // Create 3D Text
-            
             for child:SCNNode in sceneView.scene.rootNode.childNodes{
                 if let child = child as? SCNIdentifiedObject, let objectName = child.objectName, d3Distance(child.position,worldCoord) <= recombiningThreshold && String(objectName).contains(label) {
-                    
-                    //increments the sum and total number of nodes used (useful for computing averages)
-                    nodePositionSum = SCNVector3(nodePositionSum.x+child.position.x,nodePositionSum.y+child.position.y,nodePositionSum.z+child.position.z)
-                    nodeNumber += 1
-                    
-                    //removes the node so it does not display extra labels
-                    child.removeFromParentNode()
+                    if updatePosition == true {
+                        //increments the sum and total number of nodes used (useful for computing averages)
+                        nodePositionSum = SCNVector3(nodePositionSum.x+child.position.x,nodePositionSum.y+child.position.y,nodePositionSum.z+child.position.z)
+                        nodeNumber! += 1
+                        
+                        //removes the node so it does not display extra labels
+                        child.removeFromParentNode()
+                    }else{
+                        nodeNumber = nil
+                    }
                 }
             }
             
             //creates the new node to have tha average position of all of the found nodes
-            let node : SCNNode = createNewBubbleParentNode("\(label): \(round(1000*certanty)/10)%")
-            sceneView.scene.rootNode.addChildNode(node)
-            //seet the position to be equal to the average node position
-            node.position = SCNVector3(nodePositionSum.x/Float(nodeNumber),nodePositionSum.y/Float(nodeNumber),nodePositionSum.z/Float(nodeNumber))
-            print("label \(label) certanty \(round(1000*certanty)/10) world \(worldCoord) actual \(node.position)")
+            if nodeNumber == nil {
+                
+                return
+                
+            }else{
+                
+                let node : SCNNode = createNewBubbleParentNode("\(label): \(round(1000*certanty)/10)%")
+                sceneView.scene.rootNode.addChildNode(node)
+                //seet the position to be equal to the average node position
+                node.position = SCNVector3(nodePositionSum.x/Float(nodeNumber!),nodePositionSum.y/Float(nodeNumber!),nodePositionSum.z/Float(nodeNumber!))
+                print("label \(label) certanty \(round(1000*certanty)/10) world \(worldCoord) actual \(node.position)")
+            }
         }
     }
     
@@ -343,8 +367,6 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     func calculatePointCords(yoloPoint: CGPoint, view: UIView, sceneView: ARSCNView, imageProcessingSetting: String) -> CGPoint? {
         let viewShort = view.bounds.width
         let viewLong = view.bounds.height
-        
-        //displayImage(buffer: (sceneView.session.currentFrame?.capturedImage)!, debugImageView: debugImageView)
         
         // note: image is rotated 90 degrees (or maybe 270 degrees?) with respect to the view
         let imageLong = CVPixelBufferGetWidth((sceneView.session.currentFrame?.capturedImage)!)
@@ -447,29 +469,10 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             if let result = try? yolo.predict(image: resizedPixelBuffer){
                 let elapsed = CACurrentMediaTime() - startTime
                 showOnMainThread(result, elapsed)
-                displayImage(buffer: resizedPixelBuffer, debugImageView: debugImageView)
             } else {
                 //if the model could not find anything
                 print("BOGUS")
             }
-        }
-    }
-    
-    func predictUsingVision(pixelBuffer: CVPixelBuffer, inflightIndex: Int) {
-        // Measure how long it takes to predict a single video frame. Note that
-        // predict() can be called on the next frame while the previous one is
-        // still being processed. Hence the need to queue up the start times.
-        startTimes.append(CACurrentMediaTime())
-        
-        // Vision will automatically resize the input image.
-        let handler = VNImageRequestHandler(cvPixelBuffer: pixelBuffer)
-        let request = requests[inflightIndex]
-        
-        // Because perform() will block until after the request completes, we
-        // run it on a concurrent background queue, so that the next frame can
-        // be scheduled in parallel with this one.
-        DispatchQueue.global().async {
-            try? handler.perform([request])
         }
     }
     
@@ -499,11 +502,11 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 // aspect ratio. The video preview also may be letterboxed at the top
                 // and bottom.
             
-                //corrects the origin of the bounding box which was given by YOLO
+            //corrects the origin of the bounding box which was given by YOLO
             let origin = calculatePointCords(yoloPoint: CGPoint(x: prediction.rect.origin.x, y: prediction.rect.origin.y), view: view, sceneView: sceneView, imageProcessingSetting: imageProcessingSetting)
 
             //Adds a 3d label to the point at the origina of the bounding box.
-            add3dLabel(label: String(labels[prediction.classIndex]), certanty: prediction.score, point: CGPoint(x: CGFloat(origin!.x), y: CGFloat(origin!.y)))
+            add3dLabel(label: String(labels[prediction.classIndex]), certanty: prediction.score, point: CGPoint(x: CGFloat(origin!.x), y: CGFloat(origin!.y)), updatePosition: updatePosition)
 
         }
     }
@@ -523,17 +526,12 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         if inflightBuffer >= ViewController.maxInflightBuffers {
             inflightBuffer = 0
         }
-        
-        if useVision {
-            // This method should always be called from the same thread!
-            // Ain't nobody likes race conditions and crashes.
-            self.predictUsingVision(pixelBuffer: pixbuff!, inflightIndex: inflightIndex)
-        } else {
-            // For better throughput, perform the prediction on a concurrent
-            // background queue instead of on the serial VideoCapture queue.
-            DispatchQueue.global().async {
-                self.predict(pixelBuffer: pixbuff!, inflightIndex: inflightIndex, imageProcessingSetting: self.imageProcessingSetting)
-            }
+
+        // For better throughput, perform the prediction on a concurrent
+        // background queue instead of on the serial VideoCapture queue.
+        DispatchQueue.global().async {
+            self.predict(pixelBuffer: pixbuff!, inflightIndex: inflightIndex, imageProcessingSetting: self.imageProcessingSetting)
+
         }
         
         let ciImage = CIImage(cvPixelBuffer: pixbuff!)

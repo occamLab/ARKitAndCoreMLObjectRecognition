@@ -36,6 +36,12 @@
                                     <action selector="queryEnvironment:" destination="BV1-FR-VrT" eventType="touchUpInside" id="CGW-0z-2C9"/>
                                 </connections>
                             </button>
+                            <switch opaque="NO" alpha="0.75" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GzX-Z5-0Hw">
+                                <rect key="frame" x="306" y="616" width="51" height="31"/>
+                                <connections>
+                                    <action selector="updatePositionsToggle:" destination="BV1-FR-VrT" eventType="valueChanged" id="ugw-UY-SNG"/>
+                                </connections>
+                            </switch>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="LRm-eH-dbT">
                                 <rect key="frame" x="0.0" y="20" width="208" height="208"/>
                                 <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -50,9 +56,11 @@
                             <constraint firstItem="zC4-UL-pva" firstAttribute="centerY" secondItem="tix-nH-sfG" secondAttribute="centerY" id="BbD-1b-FCh"/>
                             <constraint firstItem="zC4-UL-pva" firstAttribute="leading" secondItem="W2V-Gj-Pwx" secondAttribute="leading" constant="40" id="Ddw-ka-9rb"/>
                             <constraint firstItem="zC4-UL-pva" firstAttribute="centerX" secondItem="tix-nH-sfG" secondAttribute="centerX" id="M7Y-Ez-rfh"/>
+                            <constraint firstItem="W2V-Gj-Pwx" firstAttribute="trailing" secondItem="GzX-Z5-0Hw" secondAttribute="trailing" constant="20" id="UOE-Ea-n8o"/>
                             <constraint firstItem="LRm-eH-dbT" firstAttribute="top" secondItem="W2V-Gj-Pwx" secondAttribute="top" id="aHQ-Ir-4xh"/>
                             <constraint firstItem="XMs-gA-sya" firstAttribute="trailing" secondItem="W2V-Gj-Pwx" secondAttribute="trailing" id="bg6-Jm-8Wb"/>
                             <constraint firstItem="XMs-gA-sya" firstAttribute="leading" secondItem="W2V-Gj-Pwx" secondAttribute="leading" id="fgq-Rs-G2A"/>
+                            <constraint firstItem="W2V-Gj-Pwx" firstAttribute="bottom" secondItem="GzX-Z5-0Hw" secondAttribute="bottom" constant="20" id="lYV-0y-ziv"/>
                             <constraint firstItem="W2V-Gj-Pwx" firstAttribute="trailing" secondItem="zC4-UL-pva" secondAttribute="trailing" constant="40" id="oGD-06-Ls9"/>
                             <constraint firstItem="LRm-eH-dbT" firstAttribute="leading" secondItem="W2V-Gj-Pwx" secondAttribute="leading" id="uHZ-5h-9mK"/>
                             <constraint firstItem="XMs-gA-sya" firstAttribute="top" secondItem="tix-nH-sfG" secondAttribute="top" id="vHp-rp-JQw"/>
@@ -64,6 +72,7 @@
                         <outlet property="debugImageView" destination="LRm-eH-dbT" id="kd6-RA-bpA"/>
                         <outlet property="queryEnvButton" destination="zC4-UL-pva" id="Dvt-OI-auK"/>
                         <outlet property="sceneView" destination="XMs-gA-sya" id="uz8-4k-aSX"/>
+                        <outlet property="updatePositionsSwitch" destination="GzX-Z5-0Hw" id="Jgg-D5-fVL"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SZV-WD-TEh" sceneMemberID="firstResponder"/>

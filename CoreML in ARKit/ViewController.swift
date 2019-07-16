@@ -285,7 +285,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     func add3dLabel(label: String, certanty : Float, point : CGPoint){
         //print(point)
         //let arRaycast = sceneView.session.raycastQuery(from: point, allowing: .estimatedPlane, alignment: .any)
-        let arHitTestResults : [ARHitTestResult] = sceneView.hitTest(point, types: [.featurePoint]) // Alternatively, we could use '.existingPlaneUsingExtent' for more grounded hit-test-points.
+        let arHitTestResults : [ARHitTestResult] = sceneView.hitTest(CGPoint(x: point.x,y: point.y), types: [.featurePoint]) // Alternatively, we could use '.existingPlaneUsingExtent' for more grounded hit-test-points.
         if let closestResult = arHitTestResults.first {
             
             // Get Coordinates of the neares hit point in world space
@@ -367,12 +367,18 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             
             return CGPoint(x: viewPixelLocationShort, y: viewPixelLocationLong)
         case "scaleFit":
-            let imagePixelLocationShort = yoloPoint.x * CGFloat(YOLOSize) * CGFloat(imageLong/YOLOSize)
+            
+            let viewPixelLocationShort = yoloPoint.x * CGFloat(YOLOSize) * CGFloat(viewShort/CGFloat(imageShort)*CGFloat(imageLong)/CGFloat(YOLOSize)) - CGFloat(20)
+
+            let viewPixelLocationLong = yoloPoint.y * CGFloat(YOLOSize) * CGFloat(viewLong/CGFloat(imageLong)*CGFloat(imageLong)/CGFloat(YOLOSize))
+            //let viewPixelLocationLong = yoloPoint.y * viewLong/CGFloat(YOLOSize)
+            
+            /*let imagePixelLocationShort = yoloPoint.x * CGFloat(YOLOSize) * CGFloat(imageLong/YOLOSize)
             let imagePixelLocationLong = yoloPoint.y * CGFloat(YOLOSize) * CGFloat(imageLong/YOLOSize)
 
             let viewPixelLocationShort = CGFloat(viewShort)/CGFloat(imageShort) * imagePixelLocationShort
             
-            let viewPixelLocationLong = CGFloat(viewLong)/CGFloat(imageLong) * imagePixelLocationLong
+            let viewPixelLocationLong = CGFloat(viewLong)/CGFloat(imageLong) * imagePixelLocationLong*/
             
             //print("x \(viewPixelLocationShort), y \(viewPixelLocationLong)")
             
@@ -495,19 +501,9 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             
                 //corrects the origin of the bounding box which was given by YOLO
             let origin = calculatePointCords(yoloPoint: CGPoint(x: prediction.rect.origin.x, y: prediction.rect.origin.y), view: view, sceneView: sceneView, imageProcessingSetting: imageProcessingSetting)
-            
-                //finds the location of reletive corners of the bounding box so that the actual cordinates of the bounding box can be found
-                let minXminY = calculatePointCords(yoloPoint: CGPoint(x: prediction.rect.minX, y: prediction.rect.minY), view: view, sceneView: sceneView, imageProcessingSetting: self.imageProcessingSetting)
-            let maxXminY = calculatePointCords(yoloPoint: CGPoint(x: prediction.rect.maxX, y: prediction.rect.minY), view: view, sceneView: sceneView, imageProcessingSetting: self.imageProcessingSetting)
-            let minXmaxY = calculatePointCords(yoloPoint: CGPoint(x: prediction.rect.minX, y: prediction.rect.maxY), view: view, sceneView: sceneView, imageProcessingSetting: self.imageProcessingSetting)
-            
-                //calculates the width and height of the bounding box.
-            let correctedBoundingBoxWidth = maxXminY!.x - minXminY!.x
-            let correctedBoundingBoxHeight = minXmaxY!.y - minXminY!.y
 
-            
-                //adds a label to the found object.
-            add3dLabel(label: String(labels[prediction.classIndex]), certanty: prediction.score, point: CGPoint(x: CGFloat(origin!.x+(correctedBoundingBoxWidth/2)), y: CGFloat(origin!.y+(correctedBoundingBoxHeight/2))))
+            //Adds a 3d label to the point at the origina of the bounding box.
+            add3dLabel(label: String(labels[prediction.classIndex]), certanty: prediction.score, point: CGPoint(x: CGFloat(origin!.x), y: CGFloat(origin!.y)))
 
         }
     }

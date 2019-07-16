@@ -28,7 +28,7 @@
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="30"/>
                                 <size key="titleShadowOffset" width="2" height="2"/>
-                                <state key="normal" title="Find Objects Around Me">
+                                <state key="normal" title="Say Objects Around Me">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                     <color key="titleShadowColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
@@ -37,7 +37,8 @@
                                 </connections>
                             </button>
                             <switch opaque="NO" alpha="0.75" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GzX-Z5-0Hw">
-                                <rect key="frame" x="306" y="616" width="51" height="31"/>
+                                <rect key="frame" x="163" y="616" width="51" height="31"/>
+                                <accessibility key="accessibilityConfiguration" label="Disable Object Position Updating"/>
                                 <connections>
                                     <action selector="updatePositionsToggle:" destination="BV1-FR-VrT" eventType="valueChanged" id="ugw-UY-SNG"/>
                                 </connections>
@@ -50,16 +51,30 @@
                                     <constraint firstAttribute="width" constant="208" id="edz-sY-jR4"/>
                                 </constraints>
                             </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" alpha="0.75" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Disable Object Position Updating" textAlignment="natural" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cPI-30-Ivn">
+                                <rect key="frame" x="60.5" y="583.5" width="254" height="22.5"/>
+                                <color key="backgroundColor" red="0.23986237930000001" green="0.57992632769999997" blue="0.2549437208" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <accessibility key="accessibilityConfiguration">
+                                    <bool key="isElement" value="NO"/>
+                                </accessibility>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="highlightedColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="shadowColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <size key="shadowOffset" width="2" height="2"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="GzX-Z5-0Hw" firstAttribute="top" secondItem="cPI-30-Ivn" secondAttribute="bottom" constant="10" id="3g4-1p-hCB"/>
                             <constraint firstItem="zC4-UL-pva" firstAttribute="centerY" secondItem="tix-nH-sfG" secondAttribute="centerY" id="BbD-1b-FCh"/>
                             <constraint firstItem="zC4-UL-pva" firstAttribute="leading" secondItem="W2V-Gj-Pwx" secondAttribute="leading" constant="40" id="Ddw-ka-9rb"/>
                             <constraint firstItem="zC4-UL-pva" firstAttribute="centerX" secondItem="tix-nH-sfG" secondAttribute="centerX" id="M7Y-Ez-rfh"/>
-                            <constraint firstItem="W2V-Gj-Pwx" firstAttribute="trailing" secondItem="GzX-Z5-0Hw" secondAttribute="trailing" constant="20" id="UOE-Ea-n8o"/>
                             <constraint firstItem="LRm-eH-dbT" firstAttribute="top" secondItem="W2V-Gj-Pwx" secondAttribute="top" id="aHQ-Ir-4xh"/>
                             <constraint firstItem="XMs-gA-sya" firstAttribute="trailing" secondItem="W2V-Gj-Pwx" secondAttribute="trailing" id="bg6-Jm-8Wb"/>
+                            <constraint firstItem="cPI-30-Ivn" firstAttribute="centerX" secondItem="tix-nH-sfG" secondAttribute="centerX" id="ffl-rE-DjR"/>
                             <constraint firstItem="XMs-gA-sya" firstAttribute="leading" secondItem="W2V-Gj-Pwx" secondAttribute="leading" id="fgq-Rs-G2A"/>
+                            <constraint firstItem="GzX-Z5-0Hw" firstAttribute="centerX" secondItem="tix-nH-sfG" secondAttribute="centerX" id="hI4-yV-OPM"/>
                             <constraint firstItem="W2V-Gj-Pwx" firstAttribute="bottom" secondItem="GzX-Z5-0Hw" secondAttribute="bottom" constant="20" id="lYV-0y-ziv"/>
                             <constraint firstItem="W2V-Gj-Pwx" firstAttribute="trailing" secondItem="zC4-UL-pva" secondAttribute="trailing" constant="40" id="oGD-06-Ls9"/>
                             <constraint firstItem="LRm-eH-dbT" firstAttribute="leading" secondItem="W2V-Gj-Pwx" secondAttribute="leading" id="uHZ-5h-9mK"/>

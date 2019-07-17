@@ -482,9 +482,18 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             
             //corrects the origin of the bounding box which was given by YOLO to be in the cordinates of the view space
             let origin = calculatePointCords(yoloPoint: CGPoint(x: prediction.rect.origin.x, y: prediction.rect.origin.y), view: view, sceneView: sceneView, imageProcessingSetting: imageProcessingSetting)
+            
+            //if the height of the bounding box is taller than the width then use a bottom projection else use center projection
+            if prediction.rect.height <= prediction.rect.width {
+                
+                //Adds a 3d label to the point at the origina of the bounding box.
+                add3dLabel(label: String(labels[prediction.classIndex]), certanty: prediction.score, point: CGPoint(x: CGFloat(origin!.x), y: CGFloat(origin!.y)), updatePosition: updatePosition)
+                
+            }else{
+                //Adds a 3d label to the point at the origina of the bounding box.
+                add3dLabel(label: String(labels[prediction.classIndex]), certanty: prediction.score, point: CGPoint(x: CGFloat(origin!.x), y:( CGFloat(origin!.y)+CGFloat(prediction.rect.height/2))), updatePosition: updatePosition)
+            }
 
-            //Adds a 3d label to the point at the origina of the bounding box.
-            add3dLabel(label: String(labels[prediction.classIndex]), certanty: prediction.score, point: CGPoint(x: CGFloat(origin!.x), y: CGFloat(origin!.y)), updatePosition: updatePosition)
 
         }
     }

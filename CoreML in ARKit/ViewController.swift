@@ -46,7 +46,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     var updatePosition = true
     
     //Dictates the radius in which nodes will be combined distance in in meteres. I.E. Nodes within this radius with the same tag are assumed to be talking about the same object
-    let recombiningThreshold: Double = 0.5
+    let recombiningThreshold: Double = 0.25
     
     // How many predictions we can do concurrently.
     static let maxInflightBuffers = 3
@@ -286,7 +286,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     //Add a 3d marker at the given location with the given label
     func add3dLabel(label: String, certanty : Float, point : CGPoint, updatePosition: Bool){
         //performs a hit test to find the closest point in real world space to the projected ray from the inputted screen location
-        let arHitTestResults : [ARHitTestResult] = sceneView.hitTest(CGPoint(x: point.x,y: point.y), types: [.featurePoint]) // Alternatively, we could use '.existingPlaneUsingExtent' for more grounded hit-test-points.
+        let arHitTestResults : [ARHitTestResult] = sceneView.hitTest(CGPoint(x: point.x,y: point.y), types: [.existingPlaneUsingGeometry]) // Alternatively, we could use '.existingPlaneUsingExtent' for more grounded hit-test-points.
         if let closestResult = arHitTestResults.first {
             
             // Get Coordinates of the neares hit point in world space

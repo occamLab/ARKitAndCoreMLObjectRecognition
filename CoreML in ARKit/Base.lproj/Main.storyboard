@@ -43,7 +43,7 @@
                                     <action selector="updatePositionsToggle:" destination="BV1-FR-VrT" eventType="valueChanged" id="ugw-UY-SNG"/>
                                 </connections>
                             </switch>
-                            <imageView hidden="YES" opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.0" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="LRm-eH-dbT">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="LRm-eH-dbT">
                                 <rect key="frame" x="0.0" y="20" width="208" height="208"/>
                                 <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>

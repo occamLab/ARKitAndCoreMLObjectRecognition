@@ -284,9 +284,10 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
     
     //Add a 3d marker at the given location with the given label
-    func add3dLabel(label: String, certanty : Float, point : CGPoint, updatePosition: Bool){
+    func add3dLabel(label: String, certanty : Float, point : CGPoint, updatePosition: Bool, frame: ARFrame){
         //performs a hit test to find the closest point in real world space to the projected ray from the inputted screen location
-        let arHitTestResults : [ARHitTestResult] = sceneView.hitTest(CGPoint(x: point.x,y: point.y), types: [.existingPlaneUsingGeometry]) // Alternatively, we could use '.existingPlaneUsingExtent' for more grounded hit-test-points.
+        //let arHitTestResults : [ARHitTestResult] = frame.hitTest(CGPoint(x: point.x,y: point.y), types: [.existingPlaneUsingGeometry])
+        let arHitTestResults : [ARHitTestResult] = sceneView.hitTest(CGPoint(x: point.x,y: point.y), types: [.existingPlaneUsingGeometry])
         if let closestResult = arHitTestResults.first {
             
             // Get Coordinates of the neares hit point in world space
@@ -304,8 +305,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                     //if we want to update the position of the object and place it at the average of all the points (this minimizes error due to ARKIT inaccuracies  and it can help account for movemnt of objects)
                     if updatePosition == true {
                         //increments the sum and total number of nodes used (useful for computing averages)
-                        nodePositionSum = SCNVector3(nodePositionSum.x+child.position.x,nodePositionSum.y+child.position.y,nodePositionSum.z+child.position.z)
-                        nodeNumber! += 1
+                        //nodePositionSum = SCNVector3(nodePositionSum.x+child.position.x,nodePositionSum.y+child.position.y,nodePositionSum.z+child.position.z)
+                        //nodeNumber! += 1
                         
                         //removes the node so it does not display extra labels
                         child.removeFromParentNode()
@@ -417,7 +418,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
     }
 
-    func predict(pixelBuffer: CVPixelBuffer, inflightIndex: Int, imageProcessingSetting:String) {
+    func predict(pixelBuffer: CVPixelBuffer, inflightIndex: Int, imageProcessingSetting:String, frame: ARFrame) {
         // Measure how long it takes to predict a single video frame.
         let startTime = CACurrentMediaTime()
         
@@ -455,7 +456,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             // Give the resized input to our model.
             if let result = try? yolo.predict(image: resizedPixelBuffer){
                 let elapsed = CACurrentMediaTime() - startTime
-                showOnMainThread(result, elapsed)
+                showOnMainThread(result, elapsed, frame:frame)
             } else {
                 //if the model could not find anything
                 print("An error occurred and the model returned empty predictions")
@@ -467,15 +468,15 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
     }
     
-    func showOnMainThread(_ predictions: [YOLO.Prediction], _ elapsed: CFTimeInterval) {
+    func showOnMainThread(_ predictions: [YOLO.Prediction], _ elapsed: CFTimeInterval, frame: ARFrame) {
         //redraw the bounding boxes
         DispatchQueue.main.async {
             //show the predictions in the view
-            self.show(predictions: predictions)
+            self.show(predictions: predictions,frame: frame)
         }
     }
     
-    func show(predictions: [YOLO.Prediction]) {
+    func show(predictions: [YOLO.Prediction],frame:ARFrame) {
         //iterate through all of the bounding boxes
         for i in 0..<predictions.count {
                 let prediction = predictions[i]
@@ -487,11 +488,11 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             if prediction.rect.height <= prediction.rect.width {
                 
                 //Adds a 3d label to the point at the origina of the bounding box.
-                add3dLabel(label: String(labels[prediction.classIndex]), certanty: prediction.score, point: CGPoint(x: CGFloat(origin!.x), y: CGFloat(origin!.y)), updatePosition: updatePosition)
+                add3dLabel(label: String(labels[prediction.classIndex]), certanty: prediction.score, point: CGPoint(x: CGFloat(origin!.x), y: CGFloat(origin!.y)), updatePosition: updatePosition, frame: frame)
                 
             }else{
                 //Adds a 3d label to the point at the origina of the bounding box.
-                add3dLabel(label: String(labels[prediction.classIndex]), certanty: prediction.score, point: CGPoint(x: CGFloat(origin!.x), y:( CGFloat(origin!.y)+CGFloat(prediction.rect.height/2))), updatePosition: updatePosition)
+                add3dLabel(label: String(labels[prediction.classIndex]), certanty: prediction.score, point: CGPoint(x: CGFloat(origin!.x), y:( CGFloat(origin!.y)+CGFloat(prediction.rect.height/2))), updatePosition: updatePosition, frame: frame)
             }
 
 
@@ -500,8 +501,12 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     func updateCoreML() {
         // Get Camera Image as RGB
-        let pixbuff : CVPixelBuffer? = (sceneView.session.currentFrame?.capturedImage)
-        if pixbuff == nil { return }
+        guard let ARFrame = sceneView.session.currentFrame else{
+            return
+        }
+        let pixbuff : CVPixelBuffer = (ARFrame.capturedImage)
+        
+        //displayImage(buffer: pixbuff, debugImageView: debugImageView)
         
         
         // For better throughput, we want to schedule multiple prediction requests
@@ -517,11 +522,11 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         // background queue instead of on the serial VideoCapture queue.
         DispatchQueue.global().async {
             //make a prediction about the contents of the image
-            self.predict(pixelBuffer: pixbuff!, inflightIndex: inflightIndex, imageProcessingSetting: self.imageProcessingSetting)
+            self.predict(pixelBuffer: pixbuff, inflightIndex: inflightIndex, imageProcessingSetting: self.imageProcessingSetting, frame: ARFrame)
 
         }
         //convert the current frae into a CI image
-        let ciImage = CIImage(cvPixelBuffer: pixbuff!)
+        let ciImage = CIImage(cvPixelBuffer: pixbuff)
 
         // Prepare CoreML/Vision Request
         let imageRequestHandler = VNImageRequestHandler(ciImage: ciImage, options: [:])

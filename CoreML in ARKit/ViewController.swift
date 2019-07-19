@@ -125,8 +125,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 //if the node is close enough to the user
                 if distanceToNode <= Double(queryRange) && (abs(angleDiff) > 2.75) {
                     // Creates an instance of AVSpeechUtterance and pass in a String to be spoken. This creates a synthesis of the string as though it is being spoken
-                    let speechUtterance: AVSpeechUtterance = AVSpeechUtterance(string: "\(child.objectName!) accurate. Distance: \(round(10*distanceToNode)/10) meters. AngleDiff: \(angleDiff)")
-                    print("\(child.objectName!) accurate. Distance: \(round(10*distanceToNode)/10) meters. \(angleDiff)")
+                    let speechUtterance: AVSpeechUtterance = AVSpeechUtterance(string: "\(child.objectName!) accurate. Distance: \(round(10*distanceToNode)/10) meters.")
+                    //print("\(child.objectName!) accurate. Distance: \(round(10*distanceToNode)/10) meters. \(angleDiff)")
                     //Specify the speech utterance rate. The higher the values the slower speech patterns. The default rate, AVSpeechUtteranceDefaultSpeechRate is 0.5
                     speechUtterance.rate = 0.5
                     // Line 5. Pass in the urrerance to the synthesizer to actually speak.
@@ -326,8 +326,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                     //if we want to update the position of the object and place it at the average of all the points (this minimizes error due to ARKIT inaccuracies  and it can help account for movemnt of objects)
                     if updatePosition == true {
                         //increments the sum and total number of nodes used (useful for computing averages)
-                        //nodePositionSum = SCNVector3(nodePositionSum.x+child.position.x,nodePositionSum.y+child.position.y,nodePositionSum.z+child.position.z)
-                        //nodeNumber! += 1
+                        nodePositionSum = SCNVector3(nodePositionSum.x+child.position.x,nodePositionSum.y+child.position.y,nodePositionSum.z+child.position.z)
+                        nodeNumber! += 1
                         
                         //removes the node so it does not display extra labels
                         child.removeFromParentNode()

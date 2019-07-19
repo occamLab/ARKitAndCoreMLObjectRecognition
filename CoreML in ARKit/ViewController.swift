@@ -110,9 +110,14 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             let distanceToNode = d3Distance(pov.position, child.position)
             
             let cameraToNodeVector = Vector3.init(pov.position.x-child.position.x,pov.position.y-child.position.y,pov.position.z-child.position.z).normalized()
+            let cameraToObjectFloorPlane = Vector3.init(cameraToNodeVector.x,
+                                                        0.0,
+                                                        cameraToNodeVector.z).normalized()
             
             let negZAxis = Matrix3.init([pov.transform.m11, pov.transform.m12,pov.transform.m13,pov.transform.m21,pov.transform.m22,pov.transform.m23,pov.transform.m31,pov.transform.m32,pov.transform.m33])*Vector3.init(0.0, 0.0, -1.0)
-            let angleDiff = acos(negZAxis.dot(cameraToNodeVector))
+            let negZAxisFloorPlane = Vector3.init(negZAxis.x, 0.0, negZAxis.z).normalized()
+            //let angleDiff = acos(negZAxis.dot(cameraToNodeVector))
+            let angleDiff = acos(negZAxisFloorPlane.dot(cameraToObjectFloorPlane))
             
             
             if let child = child as? SCNIdentifiedObject {

@@ -123,9 +123,10 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             if let child = child as? SCNIdentifiedObject {
                 
                 //if the node is close enough to the user
-                if distanceToNode <= Double(queryRange) && (abs(angleDiff) < 2.0) {
+                if distanceToNode <= Double(queryRange) && (abs(angleDiff) > 2.75) {
                     // Creates an instance of AVSpeechUtterance and pass in a String to be spoken. This creates a synthesis of the string as though it is being spoken
-                    let speechUtterance: AVSpeechUtterance = AVSpeechUtterance(string: "\(child.objectName!) accurate. Distance: \(round(10*distanceToNode)/10) meters.")
+                    let speechUtterance: AVSpeechUtterance = AVSpeechUtterance(string: "\(child.objectName!) accurate. Distance: \(round(10*distanceToNode)/10) meters. AngleDiff: \(angleDiff)")
+                    print("\(child.objectName!) accurate. Distance: \(round(10*distanceToNode)/10) meters. \(angleDiff)")
                     //Specify the speech utterance rate. The higher the values the slower speech patterns. The default rate, AVSpeechUtteranceDefaultSpeechRate is 0.5
                     speechUtterance.rate = 0.5
                     // Line 5. Pass in the urrerance to the synthesizer to actually speak.
@@ -350,7 +351,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 sceneView.scene.rootNode.addChildNode(node)
                 //set the position to be equal to the average node position for new nodes this is just the location found for the node because this is the average of one value
                 node.position = SCNVector3(nodePositionSum.x/Float(nodeNumber!),nodePositionSum.y/Float(nodeNumber!),nodePositionSum.z/Float(nodeNumber!))
-                print("label \(label) certanty \(round(1000*certanty)/10) world \(worldCoord) actual \(node.position)")
+                print("placed \(label) with \(round(1000*certanty)/10)% certanty at \(node.position)")
             }
         }
     }

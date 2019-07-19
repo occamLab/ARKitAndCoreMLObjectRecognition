@@ -1,0 +1,635 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 48;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		7EB74BC6B03E16E6D06FDFA8AC91AF2D /* VectorMath+Quartz.swift in Sources */ = {isa = PBXBuildFile; fileRef = 772D0B6E6F305B17AFBE3063AC3F8A65 /* VectorMath+Quartz.swift */; };
+		A8C1E19061422CD7BEEAFE653B769421 /* Pods-CoreML in ARKit-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 5A056FE77E453077BFA3A4E4AB8F2F2B /* Pods-CoreML in ARKit-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		AA2EF29E140F8C562716502316792BCA /* VectorMath+SceneKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F2DA5F5B22B266FB7CA942315EEEDA0 /* VectorMath+SceneKit.swift */; };
+		B71A1DBB9892CA3B240803F14537FE98 /* Pods-CoreML in ARKit-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 07AF1F2AC3417D23CE8BED6C66A53466 /* Pods-CoreML in ARKit-dummy.m */; };
+		C64CCAAA977394A55F972715F7EBD284 /* VectorMath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02206A339D7CB281177C2C8178968697 /* VectorMath.swift */; };
+		C79EE7D1FE133B934B7780B989939B70 /* VectorMath-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = B046CE52CC2192202FF3C750C1A8B24C /* VectorMath-dummy.m */; };
+		C8CC1FD43809C7CFC1FB9AB77FD5069D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB4607EFCA7C5F75397649E792E2AFCB /* Foundation.framework */; };
+		CC6554F683318EC6D8A39FAFAD768CF6 /* VectorMath-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 09CDDCC7DAF1B583178A7D89E13EBECA /* VectorMath-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D19CA372939DB42F69CA031DED384229 /* VectorMath+MapKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E4617004977394CD91728474BCAD176 /* VectorMath+MapKit.swift */; };
+		DCC7F70E243F496E46A3A11D03AC42B7 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB4607EFCA7C5F75397649E792E2AFCB /* Foundation.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		0922C0D000ED23D6BFF266A86078492E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CE4A19511DEE07AE688A7D77552CD3DC;
+			remoteInfo = VectorMath;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		02206A339D7CB281177C2C8178968697 /* VectorMath.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = VectorMath.swift; path = VectorMath/VectorMath.swift; sourceTree = "<group>"; };
+		07AF1F2AC3417D23CE8BED6C66A53466 /* Pods-CoreML in ARKit-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-CoreML in ARKit-dummy.m"; sourceTree = "<group>"; };
+		09CDDCC7DAF1B583178A7D89E13EBECA /* VectorMath-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "VectorMath-umbrella.h"; sourceTree = "<group>"; };
+		252334A679AAE220D3A8D0A78645842D /* Pods-CoreML in ARKit.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-CoreML in ARKit.debug.xcconfig"; sourceTree = "<group>"; };
+		43AE3FA48CDA7D5C94D82D32E068A87C /* VectorMath-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "VectorMath-prefix.pch"; sourceTree = "<group>"; };
+		5A056FE77E453077BFA3A4E4AB8F2F2B /* Pods-CoreML in ARKit-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-CoreML in ARKit-umbrella.h"; sourceTree = "<group>"; };
+		5BDF17D43F0EA7DF13507021DA0E69B4 /* VectorMath.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = VectorMath.xcconfig; sourceTree = "<group>"; };
+		5F2DA5F5B22B266FB7CA942315EEEDA0 /* VectorMath+SceneKit.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "VectorMath+SceneKit.swift"; path = "VectorMath/VectorMath+SceneKit.swift"; sourceTree = "<group>"; };
+		6481FD0BFCF0E5F9A087EB01FF70C326 /* Pods-CoreML in ARKit-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-CoreML in ARKit-acknowledgements.plist"; sourceTree = "<group>"; };
+		6E3FFDA8725B85A95CE009C27A478FFC /* VectorMath.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = VectorMath.modulemap; sourceTree = "<group>"; };
+		6F4F22CD4FEC530AFD9563D31242EF6F /* Pods-CoreML in ARKit-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-CoreML in ARKit-acknowledgements.markdown"; sourceTree = "<group>"; };
+		772D0B6E6F305B17AFBE3063AC3F8A65 /* VectorMath+Quartz.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "VectorMath+Quartz.swift"; path = "VectorMath/VectorMath+Quartz.swift"; sourceTree = "<group>"; };
+		7FDCD32EE801231F3D7E156A23CEC2E6 /* Pods-CoreML in ARKit.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-CoreML in ARKit.modulemap"; sourceTree = "<group>"; };
+		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		9E4617004977394CD91728474BCAD176 /* VectorMath+MapKit.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "VectorMath+MapKit.swift"; path = "VectorMath/VectorMath+MapKit.swift"; sourceTree = "<group>"; };
+		AFD1DD2BB8B42F554FFDF0A37355E580 /* VectorMath.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = VectorMath.framework; path = VectorMath.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B046CE52CC2192202FF3C750C1A8B24C /* VectorMath-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "VectorMath-dummy.m"; sourceTree = "<group>"; };
+		C6BC74BC01D8DB7C9CAABB2D3940CD41 /* Pods_CoreML_in_ARKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_CoreML_in_ARKit.framework; path = "Pods-CoreML in ARKit.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CB4607EFCA7C5F75397649E792E2AFCB /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		D6ECDBA202DAFD71490329C25BC28ED9 /* Pods-CoreML in ARKit-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-CoreML in ARKit-Info.plist"; sourceTree = "<group>"; };
+		E39C3820CB33B6A1F41865E38F2E8788 /* VectorMath-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "VectorMath-Info.plist"; sourceTree = "<group>"; };
+		EF366B818C313EA18749CD32F011C3AA /* Pods-CoreML in ARKit.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-CoreML in ARKit.release.xcconfig"; sourceTree = "<group>"; };
+		FFFFE45243B94FD01863C965D5157D7C /* Pods-CoreML in ARKit-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-CoreML in ARKit-frameworks.sh"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		AADB3D1D7E69197EF75C903B420314B6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C8CC1FD43809C7CFC1FB9AB77FD5069D /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B20A792FB98CC7475BDC5FB1B700521A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DCC7F70E243F496E46A3A11D03AC42B7 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		160BED6C0633826A9E18DAD9D86D0119 /* Pods-CoreML in ARKit */ = {
+			isa = PBXGroup;
+			children = (
+				7FDCD32EE801231F3D7E156A23CEC2E6 /* Pods-CoreML in ARKit.modulemap */,
+				6F4F22CD4FEC530AFD9563D31242EF6F /* Pods-CoreML in ARKit-acknowledgements.markdown */,
+				6481FD0BFCF0E5F9A087EB01FF70C326 /* Pods-CoreML in ARKit-acknowledgements.plist */,
+				07AF1F2AC3417D23CE8BED6C66A53466 /* Pods-CoreML in ARKit-dummy.m */,
+				FFFFE45243B94FD01863C965D5157D7C /* Pods-CoreML in ARKit-frameworks.sh */,
+				D6ECDBA202DAFD71490329C25BC28ED9 /* Pods-CoreML in ARKit-Info.plist */,
+				5A056FE77E453077BFA3A4E4AB8F2F2B /* Pods-CoreML in ARKit-umbrella.h */,
+				252334A679AAE220D3A8D0A78645842D /* Pods-CoreML in ARKit.debug.xcconfig */,
+				EF366B818C313EA18749CD32F011C3AA /* Pods-CoreML in ARKit.release.xcconfig */,
+			);
+			name = "Pods-CoreML in ARKit";
+			path = "Target Support Files/Pods-CoreML in ARKit";
+			sourceTree = "<group>";
+		};
+		1DB2E946A9906314F426B9E0EB4B4666 /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				6E3FFDA8725B85A95CE009C27A478FFC /* VectorMath.modulemap */,
+				5BDF17D43F0EA7DF13507021DA0E69B4 /* VectorMath.xcconfig */,
+				B046CE52CC2192202FF3C750C1A8B24C /* VectorMath-dummy.m */,
+				E39C3820CB33B6A1F41865E38F2E8788 /* VectorMath-Info.plist */,
+				43AE3FA48CDA7D5C94D82D32E068A87C /* VectorMath-prefix.pch */,
+				09CDDCC7DAF1B583178A7D89E13EBECA /* VectorMath-umbrella.h */,
+			);
+			name = "Support Files";
+			path = "../Target Support Files/VectorMath";
+			sourceTree = "<group>";
+		};
+		1F0D6EAD3F83B828D0060584B9CD948B /* MapKit */ = {
+			isa = PBXGroup;
+			children = (
+				9E4617004977394CD91728474BCAD176 /* VectorMath+MapKit.swift */,
+			);
+			name = MapKit;
+			sourceTree = "<group>";
+		};
+		835ECA98F2999F0697F4E67DF4432972 /* SceneKit */ = {
+			isa = PBXGroup;
+			children = (
+				5F2DA5F5B22B266FB7CA942315EEEDA0 /* VectorMath+SceneKit.swift */,
+			);
+			name = SceneKit;
+			sourceTree = "<group>";
+		};
+		9B055D0CFEA43187E72B03DED11F5662 /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				CB4607EFCA7C5F75397649E792E2AFCB /* Foundation.framework */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
+		B0EDB07C089568A701B4B44C11B18987 /* VectorMath */ = {
+			isa = PBXGroup;
+			children = (
+				F30F3EED7DA1E7BC6C93F52AAECF6658 /* Core */,
+				1F0D6EAD3F83B828D0060584B9CD948B /* MapKit */,
+				ED03986809138BE75FA664874A50E031 /* Quartz */,
+				835ECA98F2999F0697F4E67DF4432972 /* SceneKit */,
+				1DB2E946A9906314F426B9E0EB4B4666 /* Support Files */,
+			);
+			name = VectorMath;
+			path = VectorMath;
+			sourceTree = "<group>";
+		};
+		CF1408CF629C7361332E53B88F7BD30C = {
+			isa = PBXGroup;
+			children = (
+				9D940727FF8FB9C785EB98E56350EF41 /* Podfile */,
+				D210D550F4EA176C3123ED886F8F87F5 /* Frameworks */,
+				E2E64869D0C8F96FFC19DF072F491D54 /* Pods */,
+				FFC6623177610D68ED99A5AC38C96A6E /* Products */,
+				CFBD6DF311D6ABE7ACDF62A3FFCEFFA9 /* Targets Support Files */,
+			);
+			sourceTree = "<group>";
+		};
+		CFBD6DF311D6ABE7ACDF62A3FFCEFFA9 /* Targets Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				160BED6C0633826A9E18DAD9D86D0119 /* Pods-CoreML in ARKit */,
+			);
+			name = "Targets Support Files";
+			sourceTree = "<group>";
+		};
+		D210D550F4EA176C3123ED886F8F87F5 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				9B055D0CFEA43187E72B03DED11F5662 /* iOS */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		E2E64869D0C8F96FFC19DF072F491D54 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				B0EDB07C089568A701B4B44C11B18987 /* VectorMath */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		ED03986809138BE75FA664874A50E031 /* Quartz */ = {
+			isa = PBXGroup;
+			children = (
+				772D0B6E6F305B17AFBE3063AC3F8A65 /* VectorMath+Quartz.swift */,
+			);
+			name = Quartz;
+			sourceTree = "<group>";
+		};
+		F30F3EED7DA1E7BC6C93F52AAECF6658 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				02206A339D7CB281177C2C8178968697 /* VectorMath.swift */,
+			);
+			name = Core;
+			sourceTree = "<group>";
+		};
+		FFC6623177610D68ED99A5AC38C96A6E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				C6BC74BC01D8DB7C9CAABB2D3940CD41 /* Pods_CoreML_in_ARKit.framework */,
+				AFD1DD2BB8B42F554FFDF0A37355E580 /* VectorMath.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		2569618A093E38FAC97B3036273D1B29 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A8C1E19061422CD7BEEAFE653B769421 /* Pods-CoreML in ARKit-umbrella.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CC44476186F128CABCEE9641EAACF7CC /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CC6554F683318EC6D8A39FAFAD768CF6 /* VectorMath-umbrella.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		6495F118E6931139D35F9BB9608E3E2C /* Pods-CoreML in ARKit */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0ACF61EFDC5087EB0D84D887DD90E3EC /* Build configuration list for PBXNativeTarget "Pods-CoreML in ARKit" */;
+			buildPhases = (
+				2569618A093E38FAC97B3036273D1B29 /* Headers */,
+				44B50F36423DD15CEB0276F6BC0B0A32 /* Sources */,
+				B20A792FB98CC7475BDC5FB1B700521A /* Frameworks */,
+				49E88E6FC19FD3328B95152757B3C996 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AB51CA66479A38BE72778625A1A6CCD2 /* PBXTargetDependency */,
+			);
+			name = "Pods-CoreML in ARKit";
+			productName = "Pods-CoreML in ARKit";
+			productReference = C6BC74BC01D8DB7C9CAABB2D3940CD41 /* Pods_CoreML_in_ARKit.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		CE4A19511DEE07AE688A7D77552CD3DC /* VectorMath */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 55155E24C592A0CFA2094FFB4257C35C /* Build configuration list for PBXNativeTarget "VectorMath" */;
+			buildPhases = (
+				CC44476186F128CABCEE9641EAACF7CC /* Headers */,
+				18F5D28FC5A364948FC4EDCC4D924D4B /* Sources */,
+				AADB3D1D7E69197EF75C903B420314B6 /* Frameworks */,
+				8A5EE49704D9ECBF1283864253FF1299 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = VectorMath;
+			productName = VectorMath;
+			productReference = AFD1DD2BB8B42F554FFDF0A37355E580 /* VectorMath.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		BFDFE7DC352907FC980B868725387E98 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0930;
+				LastUpgradeCheck = 0930;
+			};
+			buildConfigurationList = 4821239608C13582E20E6DA73FD5F1F9 /* Build configuration list for PBXProject "Pods" */;
+			compatibilityVersion = "Xcode 8.0";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = CF1408CF629C7361332E53B88F7BD30C;
+			productRefGroup = FFC6623177610D68ED99A5AC38C96A6E /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				6495F118E6931139D35F9BB9608E3E2C /* Pods-CoreML in ARKit */,
+				CE4A19511DEE07AE688A7D77552CD3DC /* VectorMath */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		49E88E6FC19FD3328B95152757B3C996 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8A5EE49704D9ECBF1283864253FF1299 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		18F5D28FC5A364948FC4EDCC4D924D4B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D19CA372939DB42F69CA031DED384229 /* VectorMath+MapKit.swift in Sources */,
+				7EB74BC6B03E16E6D06FDFA8AC91AF2D /* VectorMath+Quartz.swift in Sources */,
+				AA2EF29E140F8C562716502316792BCA /* VectorMath+SceneKit.swift in Sources */,
+				C79EE7D1FE133B934B7780B989939B70 /* VectorMath-dummy.m in Sources */,
+				C64CCAAA977394A55F972715F7EBD284 /* VectorMath.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		44B50F36423DD15CEB0276F6BC0B0A32 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B71A1DBB9892CA3B240803F14537FE98 /* Pods-CoreML in ARKit-dummy.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		AB51CA66479A38BE72778625A1A6CCD2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = VectorMath;
+			target = CE4A19511DEE07AE688A7D77552CD3DC /* VectorMath */;
+			targetProxy = 0922C0D000ED23D6BFF266A86078492E /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		4093433A309EFE160336AC736594AB22 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"POD_CONFIGURATION_DEBUG=1",
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRIP_INSTALLED_PRODUCT = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.2;
+				SYMROOT = "${SRCROOT}/../build";
+			};
+			name = Debug;
+		};
+		924D56B1D59CD3049300EAEEA256114E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"POD_CONFIGURATION_RELEASE=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRIP_INSTALLED_PRODUCT = NO;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 4.2;
+				SYMROOT = "${SRCROOT}/../build";
+			};
+			name = Release;
+		};
+		A76A95DBE34481B428399200056A6919 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = EF366B818C313EA18749CD32F011C3AA /* Pods-CoreML in ARKit.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Target Support Files/Pods-CoreML in ARKit/Pods-CoreML in ARKit-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-CoreML in ARKit/Pods-CoreML in ARKit.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		A8F82980A68EBAE21AC340976AB92A6A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5BDF17D43F0EA7DF13507021DA0E69B4 /* VectorMath.xcconfig */;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/VectorMath/VectorMath-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/VectorMath/VectorMath-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/VectorMath/VectorMath.modulemap";
+				PRODUCT_MODULE_NAME = VectorMath;
+				PRODUCT_NAME = VectorMath;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		B4AAAEDBBB2D897B1607589BA2F03B4F /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5BDF17D43F0EA7DF13507021DA0E69B4 /* VectorMath.xcconfig */;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/VectorMath/VectorMath-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/VectorMath/VectorMath-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/VectorMath/VectorMath.modulemap";
+				PRODUCT_MODULE_NAME = VectorMath;
+				PRODUCT_NAME = VectorMath;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		D03F886D677C90A387B811DBD3199ED4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 252334A679AAE220D3A8D0A78645842D /* Pods-CoreML in ARKit.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Target Support Files/Pods-CoreML in ARKit/Pods-CoreML in ARKit-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-CoreML in ARKit/Pods-CoreML in ARKit.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0ACF61EFDC5087EB0D84D887DD90E3EC /* Build configuration list for PBXNativeTarget "Pods-CoreML in ARKit" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D03F886D677C90A387B811DBD3199ED4 /* Debug */,
+				A76A95DBE34481B428399200056A6919 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		4821239608C13582E20E6DA73FD5F1F9 /* Build configuration list for PBXProject "Pods" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4093433A309EFE160336AC736594AB22 /* Debug */,
+				924D56B1D59CD3049300EAEEA256114E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		55155E24C592A0CFA2094FFB4257C35C /* Build configuration list for PBXNativeTarget "VectorMath" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A8F82980A68EBAE21AC340976AB92A6A /* Debug */,
+				B4AAAEDBBB2D897B1607589BA2F03B4F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+}

@@ -13,6 +13,7 @@ import ARKit
 import AVFoundation
 import CoreMedia
 import Vision
+import VectorMath
 
 //MARK: SCNIdentifiedObject Class this is used to store a SCNNode which has a label property for being displayed in the wold and having its text referrenced by other objects and methods
 class SCNIdentifiedObject: SCNNode {
@@ -88,7 +89,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             updatePosition = true
         }
     }
-    
+
     @IBOutlet var sceneView: ARSCNView!
     let bubbleDepth : Float = 0.01 // the 'depth' of 3D text
     var latestPrediction : String = "…" // a variable containing the latest CoreML prediction
@@ -98,15 +99,34 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     @IBOutlet weak var queryEnvButton: UIButton!
     
     @IBAction func queryEnvironment(_ sender: Any) {
+        
+        guard let pov = sceneView.pointOfView else{
+            return
+        }
+        
         //iterate throguh the nodes in the scene
         for child:SCNNode in sceneView.scene.rootNode.childNodes{
             
-            if let child = child as? SCNIdentifiedObject, let pov = sceneView.pointOfView {
+            let distanceToNode = d3Distance(pov.position, child.position)
+            
+            let cameraToNodeVector = Vector3.init(pov.position.x-child.position.x,pov.position.y-child.position.y,pov.position.z-child.position.z).normalized()
+            let cameraToObjectFloorPlane = Vector3.init(cameraToNodeVector.x,
+                                                        0.0,
+                                                        cameraToNodeVector.z).normalized()
+            
+            let negZAxis = Matrix3.init([pov.transform.m11, pov.transform.m12,pov.transform.m13,pov.transform.m21,pov.transform.m22,pov.transform.m23,pov.transform.m31,pov.transform.m32,pov.transform.m33])*Vector3.init(0.0, 0.0, -1.0)
+            let negZAxisFloorPlane = Vector3.init(negZAxis.x, 0.0, negZAxis.z).normalized()
+            //let angleDiff = acos(negZAxis.dot(cameraToNodeVector))
+            let angleDiff = acos(negZAxisFloorPlane.dot(cameraToObjectFloorPlane))
+            
+            
+            if let child = child as? SCNIdentifiedObject {
                 
                 //if the node is close enough to the user
-                if d3Distance(pov.position, child.position) <= Double(queryRange){
+                if distanceToNode <= Double(queryRange) && (abs(angleDiff) > 2.75) {
                     // Creates an instance of AVSpeechUtterance and pass in a String to be spoken. This creates a synthesis of the string as though it is being spoken
-                    let speechUtterance: AVSpeechUtterance = AVSpeechUtterance(string: "\(child.objectName!) accurate. Distance: \(round(10*d3Distance(pov.position, child.position))/10) meters.")
+                    let speechUtterance: AVSpeechUtterance = AVSpeechUtterance(string: "\(child.objectName!) accurate. Distance: \(round(10*distanceToNode)/10) meters.")
+                    //print("\(child.objectName!) accurate. Distance: \(round(10*distanceToNode)/10) meters. \(angleDiff)")
                     //Specify the speech utterance rate. The higher the values the slower speech patterns. The default rate, AVSpeechUtteranceDefaultSpeechRate is 0.5
                     speechUtterance.rate = 0.5
                     // Line 5. Pass in the urrerance to the synthesizer to actually speak.
@@ -115,6 +135,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             }
         }
     }
+
+    
     
     // COREML
     // A Serial Queue used in multithreading
@@ -304,8 +326,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                     //if we want to update the position of the object and place it at the average of all the points (this minimizes error due to ARKIT inaccuracies  and it can help account for movemnt of objects)
                     if updatePosition == true {
                         //increments the sum and total number of nodes used (useful for computing averages)
-                        //nodePositionSum = SCNVector3(nodePositionSum.x+child.position.x,nodePositionSum.y+child.position.y,nodePositionSum.z+child.position.z)
-                        //nodeNumber! += 1
+                        nodePositionSum = SCNVector3(nodePositionSum.x+child.position.x,nodePositionSum.y+child.position.y,nodePositionSum.z+child.position.z)
+                        nodeNumber! += 1
                         
                         //removes the node so it does not display extra labels
                         child.removeFromParentNode()
@@ -329,7 +351,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
                 sceneView.scene.rootNode.addChildNode(node)
                 //set the position to be equal to the average node position for new nodes this is just the location found for the node because this is the average of one value
                 node.position = SCNVector3(nodePositionSum.x/Float(nodeNumber!),nodePositionSum.y/Float(nodeNumber!),nodePositionSum.z/Float(nodeNumber!))
-                print("label \(label) certanty \(round(1000*certanty)/10) world \(worldCoord) actual \(node.position)")
+                print("placed \(label) with \(round(1000*certanty)/10)% certanty at \(node.position)")
             }
         }
     }

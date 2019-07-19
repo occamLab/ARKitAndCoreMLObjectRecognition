@@ -5,6 +5,9 @@
       location = "group:CoreML in ARKit.xcodeproj">
    </FileRef>
    <FileRef
+      location = "group:CoreML in ARKit">
+   </FileRef>
+   <FileRef
       location = "group:Pods/Pods.xcodeproj">
    </FileRef>
 </Workspace>

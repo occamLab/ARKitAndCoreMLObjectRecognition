@@ -286,8 +286,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     //Add a 3d marker at the given location with the given label
     func add3dLabel(label: String, certanty : Float, point : CGPoint, updatePosition: Bool, frame: ARFrame){
         //performs a hit test to find the closest point in real world space to the projected ray from the inputted screen location
-        //let arHitTestResults : [ARHitTestResult] = frame.hitTest(CGPoint(x: point.x,y: point.y), types: [.existingPlaneUsingGeometry])
-        let arHitTestResults : [ARHitTestResult] = sceneView.hitTest(CGPoint(x: point.x,y: point.y), types: [.existingPlaneUsingGeometry])
+        let arHitTestResults : [ARHitTestResult] = frame.hitTest(CGPoint(x: point.x,y: point.y), types: [.existingPlaneUsingGeometry])
         if let closestResult = arHitTestResults.first {
             
             // Get Coordinates of the neares hit point in world space
@@ -372,26 +371,15 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         //changes the cropping/scaling options for getting the cordinates of the screen point based on the image that gets passed to the coreMl model
         switch imageProcessingSetting{
-        case "crop":
-            
-            let imagePixelLocationShort = yoloPoint.x * CGFloat(YOLOSize) + CGFloat((imageShort-YOLOSize)/2)
-            let imagePixelLocationLong = yoloPoint.y * CGFloat(YOLOSize) + CGFloat((imageLong-YOLOSize)/2)
-            
-            let viewPixelLocationShort = CGFloat(viewShort)/CGFloat(imageShort) * imagePixelLocationShort
-            
-            let viewPixelLocationLong = CGFloat(viewLong)/CGFloat(imageLong) * imagePixelLocationLong
-            
-            print("x \(viewPixelLocationShort), y \(viewPixelLocationLong)")
-            
-            return CGPoint(x: viewPixelLocationShort, y: viewPixelLocationLong)
         case "scaleFit":
             
             //scale the cordinates from the ML model to the respective cordinates in the screen space
-            let viewPixelLocationShort = yoloPoint.x * CGFloat(YOLOSize) * CGFloat(viewShort/CGFloat(imageShort)*CGFloat(imageLong)/CGFloat(YOLOSize)) - CGFloat(20)
-            let viewPixelLocationLong = yoloPoint.y * CGFloat(YOLOSize) * CGFloat(viewLong/CGFloat(imageLong)*CGFloat(imageLong)/CGFloat(YOLOSize))
+            let imagePixelLocationLong = (CGFloat(yoloPoint.y)*CGFloat(YOLOSize)) * CGFloat(imageLong/YOLOSize)
+            let MLImageShort = CGFloat(imageShort*YOLOSize/imageLong)
+            let imagePixelLocationShort = CGFloat(MLImageShort-(CGFloat(YOLOSize)*CGFloat(yoloPoint.x)))*CGFloat(CGFloat(imageShort)/CGFloat(YOLOSize))
 
             //return the scaled cordinates
-            return CGPoint(x: viewPixelLocationShort, y: viewPixelLocationLong)
+            return CGPoint(x: imagePixelLocationLong/CGFloat(imageLong), y: imagePixelLocationShort/CGFloat(imageShort))
             
             
             
